@@ -1,0 +1,14 @@
+{
+  "name": "e-commerceapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:build": "tsc -w",
+    "start:dev": "nodemon build/server.js",
+    "start": "concurrently npm:start:*",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ahmed Hany",
+  "license": "ISC"
+}
