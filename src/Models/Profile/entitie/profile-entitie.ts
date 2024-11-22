@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-export interface ProfileEntitie extends mongoose.Document {
+export interface ProfileEntitie {
     name: string;
-    photo: string;
-    address: string;
-    number: string;
+    photo?: string;
+    address?: string;
+    number?: string;
     role: string;
 }
 
