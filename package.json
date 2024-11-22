@@ -15,6 +15,7 @@
     "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.0",
     "@types/express-mongo-sanitize": "^2.1.2",
+    "@types/express-session": "^1.18.0",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.9",
     "@types/passport": "^1.0.17",
@@ -23,11 +24,13 @@
     "express": "^4.21.1",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^7.4.1",
+    "express-session": "^1.18.1",
     "helmet": "^8.0.0",
     "mongoose": "^8.8.2",
     "morgan": "^1.10.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
+    "reflect-metadata": "^0.2.2",
     "xss-clean": "^0.1.4"
   }
 }

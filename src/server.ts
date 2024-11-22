@@ -5,11 +5,15 @@ const mongo_sanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const helmet = require('helmet')
 const limitRate = require('express-rate-limit')
-
+import session from 'express-session';
 import { AppRouter } from "./app";
 import { connectDB } from './DBconnection';
 
 dotenv.config({ path: 'config.env' });
+
+// Controllers
+import './Models/auth/auth-controller';
+
 
 const app = express();
 
@@ -19,6 +23,16 @@ app.use(mongo_sanitize()); // for preventing nosql injection
 app.use(xss()); // for preventing xss attacks
 app.use(helmet()); // for setting security headers
 app.use(limitRate({ windowMs: 60 * 60 * 1000, max: 100, message: 'Too many requests' })) // for limiting requests
+app.use(session({
+    secret: process.env.SESSION_SECRET as string,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: true,
+        maxAge: 10000
+    }
+}));
+
 
 app.get('/', (req, res) => {
     res.send('Hello from express');

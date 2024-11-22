@@ -11,15 +11,17 @@ const googleOptions = {
 passport.use(
     new GoogleStrategy(googleOptions,
         async (accessToken, refreshToken, profile, done) => {
-            //------
-            console.log(profile);
-            //------
 
             const { name, email } = profile._json;
             const data = {
                 name,
                 email
             }
+            // save user to db
+            /* 
+                implementation later........
+            */
+
             return done(null, data);
         })
 );
@@ -30,6 +32,11 @@ passport.serializeUser((user: any, done) => {
 });
 
 passport.deserializeUser((user: any, done) => {
+
+    /*
+        get user from db 
+        implementation later........
+    */
     done(null, user);
 });
 
