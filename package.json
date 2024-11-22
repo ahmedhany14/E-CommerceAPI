@@ -10,5 +10,20 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ahmed Hany",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@types/dotenv": "^8.2.3",
+    "@types/express": "^5.0.0",
+    "@types/express-mongo-sanitize": "^2.1.2",
+    "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.9",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "mongoose": "^8.8.2",
+    "morgan": "^1.10.0",
+    "xss-clean": "^0.1.4"
+  }
 }

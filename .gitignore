@@ -133,3 +133,4 @@ build
 node_modules
 .idea
 .vscode
+config.env
