@@ -1,6 +1,7 @@
+import { Request, Response, NextFunction } from 'express';
+
 import Account from './entitie/account-entite';
 import { AccountEntite } from './entitie/account-entite';
-
 export class AccountService {
 
     async OauthAccount(email: string, profileID: string) {
@@ -10,9 +11,14 @@ export class AccountService {
         return account;
     }
 
-    async createAccount(email: string, password: string, confirmPassword: string) {
-        const account = await Account.create({ email, password, confirmPassword });
-        return account;
+    async createAccount(email: string, password: string, confirmPassword: string, next: NextFunction): Promise<AccountEntite | void> {
+        try {
+            const account = await Account.create({ email, password, confirmPassword });
+            return account;
+        }
+        catch (error) {
+            return next(error);
+        }
     }
 
     async findAccountByEmail(email: string): Promise<AccountEntite | null> {

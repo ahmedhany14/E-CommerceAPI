@@ -8,6 +8,7 @@ import { validator } from '../../Decorators/validator';
 import { AppError } from '../../utils/AppError';
 import { accountService } from '../Account/account-service';
 import { profileService } from '../Profile/profile-servies';
+import { AccountEntite } from './../Account/entitie/account-entite';
 
 interface Account {
     profileID: string;
@@ -73,7 +74,9 @@ class AuthController {
     public async register(request: Request, response: Response, next: NextFunction) {
         const { email, password, confirmPassword } = request.body;
 
-        const account = await accountService.createAccount(email, password, confirmPassword);
+        const account = await accountService.createAccount(email, password, confirmPassword, next) as AccountEntite;
+
+        if (!account) return next();
 
         const profilePayload = {
             name: email.split('@')[0] as string,
