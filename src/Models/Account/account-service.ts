@@ -3,8 +3,8 @@ import { AccountEntite } from './entitie/account-entite';
 
 export class AccountService {
 
-    async OauthAccount(email: string) {
-        const account = await new Account({ email }).save({
+    async OauthAccount(email: string, profileID: string) {
+        const account = await new Account({ email, profileID }).save({
             validateBeforeSave: false,
         });
         return account;

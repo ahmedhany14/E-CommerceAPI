@@ -7,6 +7,7 @@ export interface AccountEntite extends mongoose.Document {
     passwordChangedTime: Date;
     resetToken: string;
     expireResetToken: Date;
+    profileID: string;
 }
 
 const accountSchema: mongoose.Schema = new mongoose.Schema({
@@ -33,7 +34,11 @@ const accountSchema: mongoose.Schema = new mongoose.Schema({
     },
     passwordChangedTime: Date,
     resetToken: String,
-    expireResetToken: Date
+    expireResetToken: Date,
+    profileID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Profile',
+    }
 });
 
 const Account = mongoose.model<AccountEntite>('Account', accountSchema);

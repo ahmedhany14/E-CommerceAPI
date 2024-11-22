@@ -30,7 +30,7 @@ passport.use(
                 }
                 const profile = await profileService.createProfile(profileDate); // create profile for user
 
-                const user = await accountService.OauthAccount(email as string);
+                const user = await accountService.OauthAccount(email as string, profile._id as string); // create account for user
                 return done(null, user); // return user
             }
 

@@ -6,6 +6,7 @@ export interface ProfileEntitie {
     address?: string;
     number?: string;
     role: string;
+    _id?: string;
 }
 
 const profileSchema: mongoose.Schema = new mongoose.Schema({
