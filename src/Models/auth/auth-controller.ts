@@ -56,10 +56,15 @@ class AuthController {
 
         const profile = await profileService.findProfileById(account.profileID);
 
+        request.user = {
+            id: account._id,
+            email: account.email,
+            role: profile.role
+        }
+
         response.status(200).json({
             message: 'success',
-            account,
-            profile
+            user: request.user
         })
     }
 
@@ -75,11 +80,16 @@ class AuthController {
             role: 'user'
         }
         const profile = await profileService.createProfile(profilePayload);
+        request.user = {
+            id: account._id,
+            email: account.email,
+            role: profile.role
+        }
 
         response.status(200).json({
             message: 'success',
-            account,
-            profile
+            user: request.user
         })
+
     }
 }

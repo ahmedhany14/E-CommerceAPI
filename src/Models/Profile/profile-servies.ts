@@ -8,12 +8,8 @@ class ProfileService {
         return await Profile.create(profile);
     }
 
-    public async findProfileById(id: string): Promise<ProfileEntitie | null> {
-        const profile = await Profile.findById(id);
-
-        if (!profile) {
-            return null;
-        }
+    public async findProfileById(id: string): Promise<ProfileEntitie> {
+        const profile = await Profile.findById(id) as ProfileEntitie;
         return profile as ProfileEntitie;
     }
 }
