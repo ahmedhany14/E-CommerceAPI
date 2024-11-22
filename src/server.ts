@@ -8,12 +8,14 @@ const limitRate = require('express-rate-limit')
 import session from 'express-session';
 import { AppRouter } from "./app";
 import { connectDB } from './DBconnection';
+import { catchErrors } from './utils/catchErrors';
+import { AppError } from './utils/AppError';
 
 dotenv.config({ path: 'config.env' });
 
 // Controllers
 import './Models/auth/auth-controller';
-
+import './Models/Profile/profile-controller';
 
 const app = express();
 
@@ -40,6 +42,12 @@ app.get('/', (req, res) => {
 
 
 app.use('/ecommerce', AppRouter.getInstance());
+
+app.all('*', (req, res, next) => {
+    next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+});
+
+app.use(catchErrors); // for catching any errors in the application
 
 const PORT = process.env.PORT;
 
