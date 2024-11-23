@@ -1,5 +1,6 @@
-import { Request } from "express";
+import { Request, Response, NextFunction } from "express";
 import multer from "multer";
+import sharp from "sharp";
 import { AppError } from "../../utils/AppError";
 
 const multerStorage = multer.memoryStorage();
@@ -17,4 +18,4 @@ const upload = multer({
     fileFilter: multerFilter
 });
 
-export const uploadMedia = upload.single("photo");
+export const uploadMedia = upload.single("photo"); 

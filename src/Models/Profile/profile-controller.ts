@@ -8,6 +8,8 @@ import { AppError } from '../../utils/AppError';
 import { requestBody } from './../../interfaces/requestBody';
 import { AuthService } from '../auth/service/auth-service';
 import { ProfileUpdateData } from './../../interfaces/profileUpdateData';
+import { uploadMedia } from '../../middelware/media/singleMediaConfig';
+import { imgConfig } from '../../middelware/media/imgConfig';
 
 const authService = new AuthService();
 @Controller('/profile')
@@ -38,4 +40,24 @@ class ProfileController {
             profile
         });
     }
+
+    @Post('/upload')
+    @use(authService.protectedRoute)
+    @use(uploadMedia)
+    public async uploadProfileImage(request: requestBody, response: Response, next: NextFunction) {
+        if (!request.file) return next(new AppError('Please upload an image', 400));
+        await imgConfig(request);
+
+        const data = {
+            photo: `profile-${request.user.profileID}.jpeg`
+        }
+        const id = request.user.profileID;
+        const profile = await profileService.updateProfile(id, data);
+
+        response.status(200).json({
+            message: 'Image uploaded',
+            profile
+        });
+    }
+
 }
