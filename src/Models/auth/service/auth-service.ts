@@ -56,6 +56,18 @@ export class AuthService {
         }
         next();
     }
+
+    public restrictTo(...roles: string[]) {
+
+        return async (request: any, response: Response, next: NextFunction) => {
+            const decoded: any = jwt.verify(request.headers.cookie.split('=')[1], process.env.JWT_SECRET as string);
+            const account = await accountService.findAccountById(decoded.payload);
+            const profile = await profileService.findProfileById(account?.profileID as string);
+            if (!roles.includes(profile.role)) return next(new AppError('You do not have permission to perform this action', 403));
+            next();
+        }
+    }
+
 }
 
 export const authService = new AuthService();
