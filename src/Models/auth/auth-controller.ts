@@ -109,4 +109,16 @@ class AuthController {
         })
 
     }
+
+    @Get('/logout')
+    public logout(request: Request, response: Response) {
+        response.cookie('jwt', 'loggedout', {
+            expires: new Date(Date.now() + 10 * 1000),
+            httpOnly: true
+        });
+
+        response.status(200).json({
+            message: 'success'
+        })
+    }
 }
