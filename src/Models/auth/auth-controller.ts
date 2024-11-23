@@ -63,7 +63,7 @@ class AuthController {
         if (!await account.comparePassword(password, account.password)) return next(new AppError('Password is incorrect', 401));
 
         // create a token and send it to the user
-        const token: string = await new AuthService().createToken(account._id as string);
+        const token: string = await new AuthService().createToken(account._id as string, response);
 
         request.user = {
             id: account._id,
@@ -97,7 +97,7 @@ class AuthController {
         await account.save({ validateBeforeSave: false });
 
         // create a token and send it to the user
-        const token: string = await new AuthService().createToken(account._id as string);
+        const token: string = await new AuthService().createToken(account._id as string, response);
 
         request.user = {
             id: account._id,
