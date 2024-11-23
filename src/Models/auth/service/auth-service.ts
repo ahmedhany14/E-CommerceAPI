@@ -57,3 +57,5 @@ export class AuthService {
         next();
     }
 }
+
+export const authService = new AuthService();
