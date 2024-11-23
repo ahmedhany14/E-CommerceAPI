@@ -134,3 +134,4 @@ node_modules
 .idea
 .vscode
 config.env
+public
