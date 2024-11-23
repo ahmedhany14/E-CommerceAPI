@@ -9,6 +9,7 @@ export interface AccountEntite extends mongoose.Document {
     resetToken: string;
     expireResetToken: Date;
     profileID: string;
+    comparePassword(candidatePassword: string, userPassword: string): Promise<boolean>;
 }
 
 const accountSchema: mongoose.Schema = new mongoose.Schema({
@@ -52,6 +53,11 @@ accountSchema.pre<AccountEntite>('save', async function (next) {
 
     next();
 });
+
+accountSchema.methods.comparePassword =
+    async function (candidatePassword: string, userPassword: string): Promise<boolean> {
+        return await bcryptjs.compare(candidatePassword, userPassword);
+    }
 
 const Account = mongoose.model<AccountEntite>('Account', accountSchema);
 

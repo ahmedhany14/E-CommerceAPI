@@ -9,6 +9,7 @@ import { AppError } from '../../utils/AppError';
 import { accountService } from '../Account/account-service';
 import { profileService } from '../Profile/profile-servies';
 import { AccountEntite } from './../Account/entitie/account-entite';
+import Account from './../Account/entitie/account-entite';
 
 interface Account {
     profileID: string;
@@ -59,9 +60,9 @@ class AuthController {
 
         // password check by using database password
 
-        /*
-        ....... implement password check logic here
-        */
+        if (!await account.comparePassword(password, account.password)) return next(new AppError('Password is incorrect', 401));
+        console.log('account', account);
+        console.log('profile', profile);
         request.user = {
             id: account._id,
             email: account.email,
@@ -94,7 +95,7 @@ class AuthController {
         /*
         ....... implement token logic here
         */
-       
+
         request.user = {
             id: account._id,
             email: account.email,
