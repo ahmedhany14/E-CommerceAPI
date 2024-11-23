@@ -90,6 +90,9 @@ class AuthController {
         }
         const profile = await profileService.createProfile(profilePayload);
 
+        account.profileID = profile._id as string;
+        await account.save({ validateBeforeSave: false });
+
         // create a token and send it to the user
 
         /*
