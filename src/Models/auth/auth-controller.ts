@@ -57,6 +57,11 @@ class AuthController {
 
         const profile = await profileService.findProfileById(account.profileID);
 
+        // password check by using database password
+
+        /*
+        ....... implement password check logic here
+        */
         request.user = {
             id: account._id,
             email: account.email,
@@ -83,6 +88,13 @@ class AuthController {
             role: 'user'
         }
         const profile = await profileService.createProfile(profilePayload);
+
+        // create a token and send it to the user
+
+        /*
+        ....... implement token logic here
+        */
+       
         request.user = {
             id: account._id,
             email: account.email,

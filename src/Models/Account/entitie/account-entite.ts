@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import bcryptjs from "bcryptjs";
 
 export interface AccountEntite extends mongoose.Document {
     email: string;
     password: string;
-    confirmPassword: string;
+    confirmPassword: string | undefined;
     passwordChangedTime: Date;
     resetToken: string;
     expireResetToken: Date;
@@ -23,7 +24,7 @@ const accountSchema: mongoose.Schema = new mongoose.Schema({
         minlength: 8
     },
     confirmPassword: {
-        type: String,
+        type: String || undefined,
         required: [true, 'Please confirm your password'],
         validate: {
             validator: function (this: AccountEntite): boolean {
@@ -39,6 +40,17 @@ const accountSchema: mongoose.Schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Profile',
     }
+});
+
+
+accountSchema.pre<AccountEntite>('save', async function (next) {
+    // middleware to hash password by using bcrypt
+    if (!this.isModified('password')) return next();
+
+    this.password = await bcryptjs.hash(this.password, 12);
+    this.confirmPassword = undefined;
+
+    next();
 });
 
 const Account = mongoose.model<AccountEntite>('Account', accountSchema);
