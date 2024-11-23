@@ -10,7 +10,13 @@ import { accountService } from '../Account/account-service';
 import { profileService } from '../Profile/profile-servies';
 import { AccountEntite } from './../Account/entitie/account-entite';
 import { AuthService } from './../auth/service/auth-service';
+import { token } from 'morgan';
 
+interface requestUser {
+    user: {
+        _id: string,
+    }
+}
 @Controller('/auth')
 class AuthController {
 
@@ -24,16 +30,18 @@ class AuthController {
 
     @Get('/google/callback')
     @use(passport.authenticate('google', { failureRedirect: '/fail' }))
-    public googleCallback(request: Request, response: Response) {
-        console.log('request.user', request.user);
+    public async googleCallback(request: requestUser, response: Response) {
+        const token: string = await new AuthService().createToken(request.user?._id, response);
         response.redirect('/ecommerce/auth/authDone');
     }
 
     @Get('/authDone')
     public authDone(request: Request, response: Response) {
+        console.log(request)
         response.status(200).json({
             message: 'User authenticated',
-            user: request.user
+            user: request.user,
+            token: request.headers.cookie?.split('=')[1]
         })
     }
 
