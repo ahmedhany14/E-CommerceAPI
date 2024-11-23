@@ -28,5 +28,11 @@ export class AccountService {
 
         return account;
     }
+
+    async findAccountById(id: string): Promise<AccountEntite | null> {
+        const account: AccountEntite | null = await Account.findById(id);
+
+        return account;
+    }
 }
 export const accountService = new AccountService();

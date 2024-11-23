@@ -10,6 +10,7 @@ export interface AccountEntite extends mongoose.Document {
     expireResetToken: Date;
     profileID: string;
     comparePassword(candidatePassword: string, userPassword: string): Promise<boolean>;
+    changedPasswordAfter(JWTTimestamp: number): boolean;
 }
 
 const accountSchema: mongoose.Schema = new mongoose.Schema({
@@ -58,6 +59,14 @@ accountSchema.methods.comparePassword =
     async function (candidatePassword: string, userPassword: string): Promise<boolean> {
         return await bcryptjs.compare(candidatePassword, userPassword);
     }
+
+accountSchema.methods.changedPasswordAfter = function (JWTTimestamp: number): boolean {
+    if (this.passwordChangedTime) {
+        const changedTimestamp: number = this.passwordChangedTime.getTime() / 1000;
+        return JWTTimestamp < changedTimestamp;
+    }
+    return false;
+}
 
 const Account = mongoose.model<AccountEntite>('Account', accountSchema);
 
