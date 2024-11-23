@@ -11,9 +11,6 @@ import { profileService } from '../Profile/profile-servies';
 import { AccountEntite } from './../Account/entitie/account-entite';
 import { AuthService } from './../auth/service/auth-service';
 
-interface Account {
-    profileID: string;
-}
 @Controller('/auth')
 class AuthController {
 
