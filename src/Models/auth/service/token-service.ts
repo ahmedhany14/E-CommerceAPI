@@ -12,9 +12,11 @@ export class TokenService {
     ) { }
 
     private signToken(payload: string): string {
-        return jwt.sign(payload, this.secret, {
-            expiresIn: this.JWT_EXPIRES_IN
-        });
+        return jwt.sign(
+            { payload },
+            this.secret,
+            { expiresIn: this.JWT_EXPIRES_IN }
+        );
     }
 
 

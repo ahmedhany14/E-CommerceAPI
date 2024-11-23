@@ -9,7 +9,7 @@ import { AppError } from '../../utils/AppError';
 import { accountService } from '../Account/account-service';
 import { profileService } from '../Profile/profile-servies';
 import { AccountEntite } from './../Account/entitie/account-entite';
-import Account from './../Account/entitie/account-entite';
+import { AuthService } from './../auth/service/auth-service';
 
 interface Account {
     profileID: string;
@@ -61,8 +61,10 @@ class AuthController {
         // password check by using database password
 
         if (!await account.comparePassword(password, account.password)) return next(new AppError('Password is incorrect', 401));
-        console.log('account', account);
-        console.log('profile', profile);
+
+        // create a token and send it to the user
+        const token: string = await new AuthService().createToken(account._id as string);
+
         request.user = {
             id: account._id,
             email: account.email,
@@ -71,7 +73,8 @@ class AuthController {
 
         response.status(200).json({
             message: 'success',
-            user: request.user
+            user: request.user,
+            token
         })
     }
 
@@ -94,10 +97,7 @@ class AuthController {
         await account.save({ validateBeforeSave: false });
 
         // create a token and send it to the user
-
-        /*
-        ....... implement token logic here
-        */
+        const token: string = await new AuthService().createToken(account._id as string);
 
         request.user = {
             id: account._id,
@@ -107,7 +107,8 @@ class AuthController {
 
         response.status(200).json({
             message: 'success',
-            user: request.user
+            user: request.user,
+            token
         })
 
     }
