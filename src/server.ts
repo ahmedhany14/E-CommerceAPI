@@ -17,6 +17,8 @@ dotenv.config({ path: 'config.env' });
 import './Models/auth/auth-controller';
 import './Models/Profile/profile-controller';
 import './Models/Products/product-controller';
+import './Models/FeedBacks/feedback-controller'
+
 const app = express();
 
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev')); // for logging requests in console 

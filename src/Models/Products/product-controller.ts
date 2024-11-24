@@ -11,6 +11,7 @@ import { productService } from './product-service';
 import { profileService } from "./../Profile/profile-servies"
 import cartService from './../Cart/cart-service'
 import { CartEntitie } from './../Cart/entitie/cart-entitie';
+import feedbackService from './../FeedBacks/feedback-service'
 
 import { requestBody } from './../../interfaces/requestBody';
 import { AppError } from '../../utils/AppError';
@@ -56,13 +57,15 @@ class ProductController {
         });
     }
 
-    @Get('/:productId')
+    @Get('/view/:productId')
     @use(authService.protectedRoute)
     public async getProduct(request: Request, response: Response): Promise<void> {
         const product = await productService.getProduct(request.params.productId);
+        const review = await feedbackService.getFeedBacks(request.params.productId)
         response.status(200).json({
             status: 'success',
-            product
+            product,
+            review
         });
     }
 
