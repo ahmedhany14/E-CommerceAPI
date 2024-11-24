@@ -45,7 +45,7 @@ class ProductController {
         });
     }
 
-    @Get('/buy/:productId')
+    @Get('/buy')
     @validator('productsIds')
     @use(authService.protectedRoute)
     public async buyProduct(request: requestBody, response: Response, next: NextFunction) {
