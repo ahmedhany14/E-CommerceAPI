@@ -45,6 +45,17 @@ class ProductController {
         });
     }
 
+    @Get('/')
+    @use(authService.protectedRoute)
+    public async getProducts(request: Request, response: Response): Promise<void> {
+        const products = await productService.getProducts();
+        response.status(200).json({
+            status: 'success',
+            products
+        });
+    }
+
+
     @Post('/buy')
     @validator('productsIds')
     @use(authService.protectedRoute)
