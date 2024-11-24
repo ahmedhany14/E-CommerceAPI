@@ -6,6 +6,7 @@ export interface ProfileEntitie {
     address?: string;
     number?: string;
     role: string;
+    nationalNumber?: string;
     _id?: string;
 }
 
@@ -27,7 +28,12 @@ const profileSchema: mongoose.Schema = new mongoose.Schema({
     },
     role: {
         type: String,
-        default: 'user'
+        default: 'user',
+        enum: ['user', 'seller']
+    },
+    nationalNumber: {
+        type: String,
+        unique: true,
     }
 });
 

@@ -3,4 +3,6 @@ export interface ProfileUpdateData {
     address?: string;
     number?: string;
     photo?: string;
+    role?: string;
+    nationalNumber?: string;
 }

@@ -10,6 +10,7 @@ import { AuthService } from '../auth/service/auth-service';
 import { ProfileUpdateData } from './../../interfaces/profileUpdateData';
 import { uploadMedia } from '../../middelware/media/singleMediaConfig';
 import { imgConfig } from '../../middelware/media/imgConfig';
+import { validator } from '../../Decorators/validator';
 
 const authService = new AuthService();
 @Controller('/profile')
@@ -60,4 +61,19 @@ class ProfileController {
         });
     }
 
+    @Post('/upgrade')
+    @use(authService.protectedRoute)
+    @validator('nationalNumber')
+    public async upgradeToSeller(request: requestBody, response: Response, next: NextFunction) {
+        const id = request.user.profileID;
+        const data = {
+            role: 'seller',
+            nationalNumber: request.body.nationalNumber as string
+        }
+        const profile = await profileService.updateProfile(id, data);
+        response.status(200).json({
+            message: 'Profile upgraded',
+            profile
+        });
+    }
 }
