@@ -56,7 +56,6 @@ class ProductController {
         3) add this product to user cart 
         */
         const profileId = request.user.profileID, productsIds = request.body.productsIds;
-        console.log(request.body)
         if (!productsIds) return next(new AppError('invalid id', 404));
 
         const order: CartEntitie = {
