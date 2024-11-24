@@ -10,8 +10,10 @@ class ProductService {
         return newProduct as ProductEntitie;
     }
 
-    public async getProducts(): Promise<ProductEntitie[]> {
-        const products = await Product.find().select('-_id -__v');
+    public async getProducts(category: string): Promise<ProductEntitie[]> {
+        const products = await Product.find({
+            category: { $all: [category] }
+        })
         return products;
     }
 

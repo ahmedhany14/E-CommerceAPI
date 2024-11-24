@@ -45,10 +45,11 @@ class ProductController {
         });
     }
 
-    @Get('/')
+    @Get('/:category')
     @use(authService.protectedRoute)
     public async getProducts(request: Request, response: Response): Promise<void> {
-        const products = await productService.getProducts();
+        const category = request.params.category
+        const products = await productService.getProducts(category);
         response.status(200).json({
             status: 'success',
             products
