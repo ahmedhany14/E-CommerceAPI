@@ -8,7 +8,9 @@ import { use } from '../../Decorators/use';
 import { authService } from '../auth/service/auth-service';
 import { ProductEntitie } from './entitie/product-entitie';
 import { productService } from './product-service';
+import { profileService } from "./../Profile/profile-servies"
 import { requestBody } from './../../interfaces/requestBody';
+import { AppError } from '../../utils/AppError';
 
 @Controller('/products')
 class ProductController {
@@ -38,5 +40,34 @@ class ProductController {
             message: 'Product created successfully',
             newProduct
         });
+    }
+
+    @Get('/buy/:productId')
+    @use(authService.protectedRoute)
+    public async buyProduct(request: requestBody, response: Response, next: NextFunction) {
+        /*
+        logic here
+        1) profile id
+        2) product id from the parameter
+        3) add this product to user cart 
+        */
+        const profileId = request.user.profileID, productId = request.params.productId;
+
+        const profile = await profileService.findProfileById(profileId);
+        const product = await productService.getProduct(productId);
+
+        if (!productId) return next(new AppError('invalid id', 404));
+
+        /*
+
+        ...... implementation of adding to the cart here
+
+        */
+
+        response.status(200).json({
+            message: "success",
+            products: product,
+            user: profile
+        })
     }
 }

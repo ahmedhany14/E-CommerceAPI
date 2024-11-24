@@ -64,8 +64,7 @@ class AuthController {
         const profile = await profileService.findProfileById(account.profileID);
 
         // password check by using database password
-
-        if (!await account.comparePassword(password, account.password)) return next(new AppError('Password is incorrect', 401));
+        if (!account.password || !await account.comparePassword(password, account.password)) return next(new AppError('Password is incorrect', 401));
 
         // create a token and send it to the user
         const token: string = await new AuthService().createToken(account._id as string, response);

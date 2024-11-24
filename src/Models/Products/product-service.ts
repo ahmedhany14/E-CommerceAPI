@@ -1,5 +1,6 @@
 import Product from './entitie/product-entitie';
 import { ProductEntitie } from './entitie/product-entitie';
+import { AppError } from '../../utils/AppError';
 
 class ProductService {
     constructor() { }
@@ -9,6 +10,12 @@ class ProductService {
         return newProduct as ProductEntitie;
     }
 
+
+    public async getProduct(id: string): Promise<ProductEntitie> {
+        const product = await Product.findById(id).select('-_id -__v');
+        if (!product) throw new Error('Product not found');
+        return product;
+    }
 }
 
 

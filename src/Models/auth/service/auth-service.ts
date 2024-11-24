@@ -60,6 +60,7 @@ export class AuthService {
     public restrictTo(...roles: string[]) {
 
         return async (request: any, response: Response, next: NextFunction) => {
+            if (!request.headers.cookie) return next(new AppError('You need to log in', 403));
             const decoded: any = jwt.verify(request.headers.cookie.split('=')[1], process.env.JWT_SECRET as string);
             const account = await accountService.findAccountById(decoded.payload);
             const profile = await profileService.findProfileById(account?.profileID as string);
