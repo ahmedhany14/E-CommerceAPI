@@ -9,6 +9,9 @@ import { authService } from '../auth/service/auth-service';
 import { ProductEntitie } from './entitie/product-entitie';
 import { productService } from './product-service';
 import { profileService } from "./../Profile/profile-servies"
+import cartService from './../Cart/cart-service'
+import { CartEntitie } from './../Cart/entitie/cart-entitie';
+
 import { requestBody } from './../../interfaces/requestBody';
 import { AppError } from '../../utils/AppError';
 
@@ -51,23 +54,21 @@ class ProductController {
         2) product id from the parameter
         3) add this product to user cart 
         */
-        const profileId = request.user.profileID, productId = request.params.productId;
+        const profileId = request.user.profileID, productsIds = request.body.productsIds;
 
-        const profile = await profileService.findProfileById(profileId);
-        const product = await productService.getProduct(productId);
+        if (!productsIds) return next(new AppError('invalid id', 404));
 
-        if (!productId) return next(new AppError('invalid id', 404));
+        const order: CartEntitie = {
+            buiedAy: new Date(),
+            profileID: profileId,
+            productsIDs: productsIds
+        }
 
-        /*
-
-        ...... implementation of adding to the cart here
-
-        */
+        const cart = await cartService.CreateCart(order);
 
         response.status(200).json({
             message: "success",
-            products: product,
-            user: profile
+            cart
         })
     }
 }

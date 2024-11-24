@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import { ProductEntitie } from "./../../Products/entitie/product-entitie"
 
-export interface CartEntitie extends mongoose.Document {
+export interface CartEntitie {
     buiedAy: Date;
     profileID: string;
-    productsIDs: Array<ProductEntitie>
+    productsIDs: Array<string>;
 }
 
 

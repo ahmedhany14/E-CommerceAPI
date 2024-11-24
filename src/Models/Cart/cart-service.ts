@@ -7,7 +7,7 @@ class CartService {
     constructor() { }
 
     public async CreateCart(cart: CartEntitie): Promise<CartEntitie> {
-        const newCart = await Cart.create(cart);
+        const newCart = (await (await Cart.create(cart)).populate('productsIDs')).populate('profileID');
         return newCart;
     }
 
