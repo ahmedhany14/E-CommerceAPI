@@ -56,17 +56,20 @@ class ProductController {
         });
     }
 
+    @Get('/:productId')
+    @use(authService.protectedRoute)
+    public async getProduct(request: Request, response: Response): Promise<void> {
+        const product = await productService.getProduct(request.params.productId);
+        response.status(200).json({
+            status: 'success',
+            product
+        });
+    }
 
     @Post('/buy')
     @validator('productsIds')
     @use(authService.protectedRoute)
     public async buyProduct(request: requestBody, response: Response, next: NextFunction) {
-        /*
-        logic here
-        1) profile id
-        2) product id from the parameter
-        3) add this product to user cart 
-        */
         const profileId = request.user.profileID, productsIds = request.body.productsIds;
         if (!productsIds) return next(new AppError('invalid id', 404));
 
