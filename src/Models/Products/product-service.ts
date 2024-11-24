@@ -22,7 +22,18 @@ class ProductService {
         if (!product) throw new Error('Product not found');
         return product;
     }
+
+    public async getSellerProducts(sellerId: string): Promise<ProductEntitie[]> {
+        const products = await Product.find({
+            sellerID: sellerId
+        });
+        return products;
+    }
+
+    public async updateProduct(id: string, product: any): Promise<ProductEntitie> {
+        const updatedProduct = await Product.findByIdAndUpdate(id, product, { new: true });
+        if (!updatedProduct) throw new AppError('Product not found', 404);
+        return updatedProduct;
+    }
 }
-
-
 export const productService = new ProductService();

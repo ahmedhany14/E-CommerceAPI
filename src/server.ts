@@ -18,6 +18,7 @@ import './Models/auth/auth-controller';
 import './Models/Profile/profile-controller';
 import './Models/Products/product-controller';
 import './Models/FeedBacks/feedback-controller'
+import './Models/Profile/Seller/seller-controller';
 
 const app = express();
 
