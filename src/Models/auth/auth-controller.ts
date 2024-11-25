@@ -13,7 +13,7 @@ import { profileService } from '../Profile/profile-servies';
 import { AccountEntite } from './../Account/entitie/account-entite';
 import { authService, AuthService } from './../auth/service/auth-service';
 import { requestBody } from '../../interfaces/requestBody';
-import Emails from '../Emails/send-email';
+import Emails from '../../utils/Emails/send-email';
 interface requestUser {
     user: {
         _id: string,

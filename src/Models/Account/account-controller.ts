@@ -10,7 +10,7 @@ import { Delete, Get, Post } from '../../Decorators/routes';
 import { use } from '../../Decorators/use';
 import { validator } from '../../Decorators/validator';
 
-import Emails from '../Emails/send-email';
+import Emails from '../../utils/Emails/send-email';
 import { requestBody } from '../../interfaces/requestBody';
 
 @Controller('/account')
@@ -57,7 +57,7 @@ class AccountController {
     @Get('/activate/:token')
     async activateAccount(request: Request, response: Response, next: NextFunction) {
         const token = request.params.token;
-        if(!token) {
+        if (!token) {
             return next(new AppError('Token is invalid or has expired', 400));
         }
 
