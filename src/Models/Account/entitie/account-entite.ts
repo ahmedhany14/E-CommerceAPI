@@ -8,6 +8,7 @@ export interface AccountEntite extends mongoose.Document {
     passwordChangedTime: Date;
     resetToken: string | undefined;
     expireResetToken: Date | undefined;
+    active: boolean;
     profileID: string;
     comparePassword(candidatePassword: string, userPassword: string): Promise<boolean>;
     changedPasswordAfter(JWTTimestamp: number): boolean;
@@ -39,6 +40,10 @@ const accountSchema: mongoose.Schema = new mongoose.Schema({
     passwordChangedTime: Date,
     resetToken: String,
     expireResetToken: Date,
+    active: {
+        type: Boolean,
+        default: true,
+    },
     profileID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Profile',

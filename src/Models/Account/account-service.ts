@@ -21,16 +21,20 @@ export class AccountService {
         }
     }
 
-    async findAccountByEmail(email: string): Promise<AccountEntite | null> {
+    async findAccountByEmail(email: string, isActive: boolean = true): Promise<AccountEntite | null> {
         const account: AccountEntite | null = await Account.findOne({
-            email
+            email,
+            active: isActive
         });
 
         return account;
     }
 
     async findAccountById(id: string): Promise<AccountEntite | null> {
-        const account: AccountEntite | null = await Account.findById(id);
+        const account: AccountEntite | null = await Account.findOne({
+            _id: id,
+            active: true
+        })
 
         return account;
     }
@@ -42,6 +46,10 @@ export class AccountService {
             expireResetToken: { $gt: Date.now() }
         });
         return account;
+    }
+
+    async deactiveAccount(id: string): Promise<void> {
+        await Account.findByIdAndUpdate(id, { active: false });
     }
 }
 export const accountService = new AccountService();

@@ -41,6 +41,7 @@ export class AuthService {
 
         // 3) Check if the account still exists
         const account = await accountService.findAccountById(decoded.payload);
+        console.log(account);
         if (!account) return next(new AppError('Account not found', 404));
         const profile = await profileService.findProfileById(account.profileID);
 

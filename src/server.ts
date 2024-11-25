@@ -20,6 +20,8 @@ import './Models/Products/product-controller';
 import './Models/FeedBacks/feedback-controller'
 import './Models/Profile/Seller/seller-controller';
 import './Models/BookMarks/bookmark-controller';
+import './Models/Account/account-controller';
+
 const app = express();
 
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev')); // for logging requests in console 

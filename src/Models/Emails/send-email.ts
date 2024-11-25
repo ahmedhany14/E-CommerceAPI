@@ -3,7 +3,6 @@ import nodemailer from 'nodemailer';
 class Emails {
     constructor(
         private to: string,
-        private from: string,
     ) { }
 
     private createTransporter() {

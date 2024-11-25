@@ -176,8 +176,7 @@ class AuthController {
         const message = `e-commerce team.\nvisit this link to reset your password ${resetURL}`;
         const subject = 'Password reset token (valid for 10 minutes)';
 
-        console.log(message);
-        await new Emails(email, 'ahmedhany14.work@gmail.com').resetTokenEmail(subject, message);
+        await new Emails(email).resetTokenEmail(subject, message);
 
         response.status(200).json({
             message: 'Reset token sent to your email'
