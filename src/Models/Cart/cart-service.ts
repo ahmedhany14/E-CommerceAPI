@@ -11,6 +11,11 @@ class CartService {
         return newCart;
     }
 
+    public async updateState(id: string, state: string): Promise<CartEntitie> {
+        const cart = await Cart.findByIdAndUpdate(id, { state: state }, { new: true, runValidators: true });
+        return cart as CartEntitie;
+    }
+
 }
 
 const cartService = new CartService();

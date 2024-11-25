@@ -35,5 +35,20 @@ class ProductService {
         if (!updatedProduct) throw new AppError('Product not found', 404);
         return updatedProduct;
     }
+
+    public async getProductsPrice(productsIds: string[]): Promise<number> {
+        let price = 0;
+        try {
+            for (let i = 0; i < productsIds.length; i++) {
+                const product = await Product.findById(productsIds[i]);
+                if (!product) throw new AppError('Product not found', 404);
+                price += product.price;
+            }
+        } catch (err) {
+            console.log(err);
+            return -1;
+        }
+        return price;
+    }
 }
 export const productService = new ProductService();

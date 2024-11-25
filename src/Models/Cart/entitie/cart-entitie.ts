@@ -4,6 +4,7 @@ import { ProductEntitie } from "./../../Products/entitie/product-entitie"
 export interface CartEntitie {
     buiedAy: Date;
     state: string;
+    price: number;
     profileID: string;
     productsIDs: Array<string>;
 }
@@ -17,6 +18,9 @@ const cartSchema: mongoose.Schema = new mongoose.Schema({
         type: String,
         default: 'pending',
         enum: ['pending', 'in a way', 'completed']
+    },
+    price: {
+        type: Number
     },
     profileID: {
         type: String,

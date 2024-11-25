@@ -48,17 +48,36 @@ class ProductController {
         const profileId = request.user.profileID, productsIds = request.body.productsIds;
         if (!productsIds) return next(new AppError('invalid id', 404));
 
+        const price = await productService.getProductsPrice(productsIds);
+        if (price === -1) return next(new AppError('error in price', 500));
         const order: CartEntitie = {
             buiedAy: new Date(),
             state: 'pending',
+            price: price,
             profileID: profileId,
             productsIDs: productsIds
         }
-
+        console.log('order', order)
         const cart = await cartService.CreateCart(order);
 
         response.status(200).json({
             message: "success",
+            cart
+        })
+    }
+
+    @Post('/state')
+    @validator('cartId', 'state')
+    @use(authService.protectedRoute)
+    @use(authService.restrictTo('user'))
+    public async stateOfCart(request: requestBody, response: Response, next: NextFunction) {
+        const { cartId, state } = request.body;
+
+        if (!cartId || !state) return next(new AppError('invalid id', 404));
+
+        const cart = await cartService.updateState(cartId, state);
+        response.status(200).json({
+            message: 'success',
             cart
         })
     }
