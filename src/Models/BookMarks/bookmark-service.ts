@@ -3,16 +3,27 @@ import { BookMarkEntitie } from './entitie/bookmark-entitie';
 
 class BookMarkService {
 
-    public async getBookmarks(profileId: string): Promise<BookMarkEntitie[]> {
-        return await BookMark.find({ profileId }).populate('productId').select('-_id -__v');
+    public async getBookmarks(profileId: string): Promise<BookMarkEntitie | null> {
+        const bookmarks = await BookMark.findOne({ profileId }).populate('productId');
+        return bookmarks;
     }
 
     public async addBookmark(profileId: string, productId: string): Promise<BookMarkEntitie> {
-        return await BookMark.create({ profileId, productId });
+        if (!await this.getBookmarks(profileId)) {
+            return await BookMark.create({ profileId, productId });
+        }
+        else {
+            return await BookMark.findOneAndUpdate({ profileId }, { $push: { productId } }) as BookMarkEntitie;
+        }
     }
 
-    public async deleteBookmark(profileId: string, productId: string): Promise<void> {
-        await BookMark.deleteOne({ profileId, productId });
+    public async deleteBookmark(profileId: string, productId: string): Promise<BookMarkEntitie> {
+        const bookmarks = await this.getBookmarks(profileId);
+        if (bookmarks) {
+            bookmarks.productId = bookmarks.productId.filter((product) => product._id.toString() !== productId);
+            await bookmarks.save();
+        }
+        return bookmarks as BookMarkEntitie;
     }
 }
 

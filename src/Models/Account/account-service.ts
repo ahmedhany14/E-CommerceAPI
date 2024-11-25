@@ -34,7 +34,7 @@ export class AccountService {
         const account: AccountEntite | null = await Account.findOne({
             _id: id,
             active: isActive
-        })
+        }).select('-password');
 
         return account;
     }

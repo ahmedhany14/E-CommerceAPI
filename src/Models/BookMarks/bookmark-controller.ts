@@ -24,7 +24,6 @@ class BookmarkController {
     @use(authService.protectedRoute)
     public async addBookmark(request: requestBody, response: Response) {
         const { productID } = request.body;
-        console.log(request.user.profileID, productID);
         const bookmark = await bookmarkService.addBookmark(request.user.profileID, productID);
 
         response.status(201).json({
