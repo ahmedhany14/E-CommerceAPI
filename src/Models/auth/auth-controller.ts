@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 import passport from './passport-config';
 import { Request, Response, NextFunction } from 'express';
 
@@ -11,7 +13,7 @@ import { profileService } from '../Profile/profile-servies';
 import { AccountEntite } from './../Account/entitie/account-entite';
 import { authService, AuthService } from './../auth/service/auth-service';
 import { requestBody } from '../../interfaces/requestBody';
-
+import Emails from '../Emails/send-email';
 interface requestUser {
     user: {
         _id: string,
@@ -149,6 +151,60 @@ class AuthController {
         account.password = password;
         account.confirmPassword = confirmPassword;
         account.passwordChangedTime = new Date();
+
+        await account.save(
+            { validateBeforeSave: false }
+        );
+
+        response.status(200).json({
+            message: "password reset succesfully, please login again",
+        })
+    }
+
+    @Post('/forgotPassword')
+    @validator('email')
+    public async forgotPassword(request: Request, response: Response, next: NextFunction) {
+        const { email } = request.body;
+        const account = await accountService.findAccountByEmail(email);
+        if (!account) return next(new AppError('Account not found', 404));
+
+        const token = await account.createPasswordResetToken();
+        await account.save({ validateBeforeSave: false });
+
+
+        const resetURL = `${request.protocol}://${request.get('host')}/ecommerce/auth/resetPassword/${token}`;
+        const message = `e-commerce team.\nvisit this link to reset your password ${resetURL}`;
+        const subject = 'Password reset token (valid for 10 minutes)';
+
+        console.log(message);
+        await new Emails(email, 'ahmedhany14.work@gmail.com').resetTokenEmail(subject, message);
+
+        response.status(200).json({
+            message: 'Reset token sent to your email'
+        })
+    }
+
+    @Post('/resetPassword/:token')
+    @validator('password', 'confirmPassword')
+    public async resetPasswordWithToken(request: Request, response: Response, next: NextFunction) {
+        const { token } = request.params;
+        const { password, confirmPassword } = request.body;
+
+        if (!password || !confirmPassword || password !== confirmPassword) {
+            return next(new AppError('both passwords not matched', 401));
+        }
+
+        const decodedToken = await crypto.createHash('sha256').update(token).digest('hex');
+        console.log(decodedToken)
+        const account = await accountService.findAccountByToken(decodedToken);
+        if (!account) return next(new AppError('Token is invalid or expired', 401));
+
+        account.password = password;
+        account.confirmPassword = confirmPassword;
+        account.passwordChangedTime = new Date();
+
+        account.resetToken = undefined;
+        account.expireResetToken = undefined;
 
         await account.save(
             { validateBeforeSave: false }

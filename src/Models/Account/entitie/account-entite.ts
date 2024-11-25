@@ -1,16 +1,17 @@
 import mongoose from "mongoose";
 import bcryptjs from "bcryptjs";
-
+import crypto from "crypto";
 export interface AccountEntite extends mongoose.Document {
     email: string;
     password: string;
     confirmPassword: string | undefined;
     passwordChangedTime: Date;
-    resetToken: string;
-    expireResetToken: Date;
+    resetToken: string | undefined;
+    expireResetToken: Date | undefined;
     profileID: string;
     comparePassword(candidatePassword: string, userPassword: string): Promise<boolean>;
     changedPasswordAfter(JWTTimestamp: number): boolean;
+    createPasswordResetToken(): Promise<string>;
 }
 
 const accountSchema: mongoose.Schema = new mongoose.Schema({
@@ -66,6 +67,17 @@ accountSchema.methods.changedPasswordAfter = function (JWTTimestamp: number): bo
         return JWTTimestamp < changedTimestamp;
     }
     return false;
+}
+
+accountSchema.methods.createPasswordResetToken = async function (): Promise<string> {
+
+    const resetToken: string = await crypto.randomBytes(32).toString('hex');
+    const hashedToken: string = await crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    this.resetToken = hashedToken;
+    this.expireResetToken = new Date(Date.now() + 100 * 60 * 1000); // 10 minutes
+
+    return resetToken;
 }
 
 const Account = mongoose.model<AccountEntite>('Account', accountSchema);

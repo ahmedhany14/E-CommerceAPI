@@ -34,5 +34,15 @@ export class AccountService {
 
         return account;
     }
+
+
+    async findAccountByToken(token: string): Promise<AccountEntite | null> {
+        const account: AccountEntite | null = await Account.findOne({
+            resetToken: token,
+            expireResetToken: { $gt: Date.now() }
+        });
+        console.log(account);
+        return account;
+    }
 }
 export const accountService = new AccountService();
