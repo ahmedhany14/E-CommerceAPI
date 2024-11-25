@@ -41,7 +41,6 @@ export class AccountService {
             resetToken: token,
             expireResetToken: { $gt: Date.now() }
         });
-        console.log(account);
         return account;
     }
 }
