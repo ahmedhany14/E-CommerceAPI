@@ -30,10 +30,10 @@ export class AccountService {
         return account;
     }
 
-    async findAccountById(id: string): Promise<AccountEntite | null> {
+    async findAccountById(id: string, isActive: boolean = true): Promise<AccountEntite | null> {
         const account: AccountEntite | null = await Account.findOne({
             _id: id,
-            active: true
+            active: isActive
         })
 
         return account;
