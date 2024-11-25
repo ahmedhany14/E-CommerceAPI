@@ -75,7 +75,7 @@ accountSchema.methods.createPasswordResetToken = async function (): Promise<stri
     const hashedToken: string = await crypto.createHash('sha256').update(resetToken).digest('hex');
 
     this.resetToken = hashedToken;
-    this.expireResetToken = new Date(Date.now() + 100 * 60 * 1000); // 10 minutes
+    this.expireResetToken = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     return resetToken;
 }
