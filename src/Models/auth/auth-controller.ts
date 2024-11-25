@@ -9,8 +9,8 @@ import { AppError } from '../../utils/AppError';
 import { accountService } from '../Account/account-service';
 import { profileService } from '../Profile/profile-servies';
 import { AccountEntite } from './../Account/entitie/account-entite';
-import { AuthService } from './../auth/service/auth-service';
-import { token } from 'morgan';
+import { authService, AuthService } from './../auth/service/auth-service';
+import { requestBody } from '../../interfaces/requestBody';
 
 interface requestUser {
     user: {
@@ -126,6 +126,36 @@ class AuthController {
 
         response.status(200).json({
             message: 'success'
+        })
+    }
+
+    @Post('/resetPassword')
+    @use(authService.protectedRoute)
+    @validator('password', 'confirmPassword')
+    public async resetPassword(request: requestBody, response: Response, next: NextFunction) {
+        const { password, confirmPassword } = request.body;
+        console.log(password, confirmPassword)
+        if (!password || !confirmPassword || password !== confirmPassword) {
+            return next(new AppError('both passwords not matched', 401));
+        }
+
+        const email = request.user.email;
+
+        const account = await accountService.findAccountByEmail(email);
+        if (!account) {
+            return next(new AppError('Account Not founded', 404));
+        }
+
+        account.password = password;
+        account.confirmPassword = confirmPassword;
+        account.passwordChangedTime = new Date();
+
+        await account.save(
+            { validateBeforeSave: false }
+        );
+
+        response.status(200).json({
+            message: "password reset succesfully, please login again",
         })
     }
 }
