@@ -50,6 +50,7 @@ class ProductController {
 
         const order: CartEntitie = {
             buiedAy: new Date(),
+            state: 'pending',
             profileID: profileId,
             productsIDs: productsIds
         }
