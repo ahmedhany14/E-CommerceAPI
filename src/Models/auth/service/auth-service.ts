@@ -5,6 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import { AppError } from "../../../utils/AppError";
 import { AccountService } from "../../Account/account-service";
 import { profileService } from "../../Profile/profile-servies";
+import { requestBody } from "../../../interfaces/requestBody";
 
 const tokenService = new TokenService();
 const accountService = new AccountService();
@@ -29,7 +30,7 @@ export class AuthService {
         return token;
     }
 
-    public async protectedRoute(request: Request, response: Response, next: NextFunction) {
+    public async protectedRoute(request: requestBody, response: Response, next: NextFunction) {
         if (!request.headers.cookie || request.headers.cookie == 'jwt=loggedout')
             return next(new AppError('You are not logged in! Please log in to get access.', 401));
 
@@ -50,7 +51,7 @@ export class AuthService {
 
         // 5) Grant access to protected route
         request.user = {
-            id: account._id,
+            id: account._id as string,
             profileID: account.profileID,
             email: account.email,
             role: profile.role
@@ -60,7 +61,7 @@ export class AuthService {
 
     public restrictTo(...roles: string[]) {
 
-        return async (request: any, response: Response, next: NextFunction) => {
+        return async (request: requestBody, response: Response, next: NextFunction) => {
             if (!request.headers.cookie) return next(new AppError('You need to log in', 403));
             const decoded: any = jwt.verify(request.headers.cookie.split('=')[1], process.env.JWT_SECRET as string);
             const account = await accountService.findAccountById(decoded.payload);
