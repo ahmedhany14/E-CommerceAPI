@@ -12,7 +12,12 @@ import { CartDocument } from './../Cart/entitie/ICart';
 import { productService } from './product-service';
 import cartService from './../Cart/cart-service'
 
+import { uploadMedia } from '../../middelware/multi-media/uploader';
+import { imgConfig } from '../../middelware/multi-media/imgsConfig';
+
+
 import { requestBody } from '../../Common/interfaces/requestBody';
+import { requestMedia } from '../../middelware/multi-media/types/requestMedia';
 
 import { AppError } from '../../Common/utils/AppError';
 
@@ -82,5 +87,28 @@ class ProductController {
             message: 'success',
             cart
         })
+    }
+
+
+    @Post('/upload/:productId')
+    @use(imgConfig)
+    @use(uploadMedia)
+    @use(authService.restrictTo('seller'))
+    @use(authService.protectedRoute)
+    public async uploadProductImage(request: requestMedia, response: Response, next: NextFunction) {
+
+        const data = {
+            images: request.files.images.map((file: any) => {
+                const name = file.originalname.split('.')[0];
+                return `product-${request.params.productId}-${name}.jpeg`
+            })
+        }
+
+        const product = await productService.updateProduct(request.params.productId, data);
+
+        response.status(200).json({
+            message: 'Image uploaded',
+            product 
+        });
     }
 }
