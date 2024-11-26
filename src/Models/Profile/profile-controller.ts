@@ -55,7 +55,7 @@ class ProfileController {
 
         const data = {
             photo: `profile-${request.user.profileID}.jpeg`
-        }
+        } as IProfile;
         const id = request.user.profileID;
         const profile = await profileService.updateProfile(id, data);
 
@@ -73,7 +73,7 @@ class ProfileController {
         const data = {
             role: 'seller',
             nationalNumber: request.body.nationalNumber as string
-        }
+        } as IProfile;
         const profile = await profileService.updateProfile(id, data);
         response.status(200).json({
             message: 'Profile upgraded',

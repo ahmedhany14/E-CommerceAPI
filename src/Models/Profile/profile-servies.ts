@@ -1,6 +1,6 @@
 import Profile from './entitie/profile-entitie';
 import { ProfileDocument } from './entitie/IProfile';
-import { ProfileUpdateData } from '../../Common/interfaces/profileUpdateData';
+import { IProfile } from './entitie/IProfile';
 class ProfileService {
     constructor() { }
 
@@ -13,7 +13,7 @@ class ProfileService {
         return profile as ProfileDocument;
     }
 
-    public async updateProfile(id: string, data: ProfileUpdateData): Promise<ProfileDocument> {
+    public async updateProfile(id: string, data: IProfile): Promise<ProfileDocument> {
         const profile = await Profile.findByIdAndUpdate(id, data, {
             new: true,
             runValidators: true
