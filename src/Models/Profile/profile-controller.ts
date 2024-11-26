@@ -11,7 +11,7 @@ import { profileService } from './profile-servies';
 import { uploadMedia } from '../../middelware/media/singleMediaConfig';
 import { imgConfig } from '../../middelware/media/imgConfig';
 
-import { ProfileUpdateData } from '../../Common/interfaces/profileUpdateData';
+import { IProfile } from './entitie/IProfile';
 import { requestBody } from '../../Common/interfaces/auth-types';
 
 import { AppError } from '../../Common/utils/AppError';
@@ -35,7 +35,7 @@ class ProfileController {
     @Post('/update')
     @use(authService.protectedRoute)
     public async updateProfile(request: requestBody, response: Response, next: NextFunction) {
-        const data: ProfileUpdateData = request.body;
+        const data: IProfile = request.body;
         const id = request.user.profileID;
 
         const profile = await profileService.updateProfile(id, data);
