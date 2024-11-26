@@ -8,8 +8,8 @@ const limitRate = require('express-rate-limit')
 import session from 'express-session';
 import { AppRouter } from "./app";
 import { connectDB } from './DBconnection';
-import { catchErrors } from './utils/catchErrors';
-import { AppError } from './utils/AppError';
+import { catchErrors } from './Common/utils/catchErrors';
+import { AppError } from './Common/utils/AppError';
 
 dotenv.config({ path: 'config.env' });
 

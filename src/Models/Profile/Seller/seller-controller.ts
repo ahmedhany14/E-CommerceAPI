@@ -1,15 +1,15 @@
 import { Response } from 'express';
 
-import { Controller } from "../../../Decorators/controller";
-import { validator } from "../../../Decorators/validator";
-import { Get, Post } from "../../../Decorators/routes";
-import { use } from "../../../Decorators/use";
+import { Controller } from "../../../Common/Decorators/controller";
+import { validator } from "../../../Common/Decorators/validator";
+import { Get, Post } from "../../../Common/Decorators/routes";
+import { use } from "../../../Common/Decorators/use";
 
 import { ProductDocument } from '../../Products/entitie/IProucts';
 import { productService } from '../../Products/product-service';
 import { AuthService } from '../../auth/service/auth-service';
 
-import { requestBody } from '../../../interfaces/requestBody';
+import { requestBody } from '../../../Common/interfaces/requestBody';
 
 const authService = new AuthService();
 

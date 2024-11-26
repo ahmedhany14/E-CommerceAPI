@@ -2,7 +2,7 @@ import passport from "passport";
 
 import { AccountService } from "../Account/account-service";
 import { profileService } from "../Profile/profile-servies";
-import { ProfileEntitie } from "../Profile/entitie/profile-entitie";
+import { ProfileDocument } from "../Profile/entitie/IProfile";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 const googleOptions = {
@@ -23,10 +23,10 @@ passport.use(
 
             if (!user) { // if user not found in db, create new account for user
 
-                const profileDate: ProfileEntitie = {
+                const profileDate = {
                     name: name as string,
                     role: 'user' as string
-                }
+                } as ProfileDocument;
                 const profile = await profileService.createProfile(profileDate); // create profile for user
 
                 const user = await accountService.OauthAccount(email as string, profile._id as string); // create account for user

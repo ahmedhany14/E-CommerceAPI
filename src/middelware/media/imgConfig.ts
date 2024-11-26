@@ -1,5 +1,4 @@
-import { Response, NextFunction } from "express";
-import { requestBody } from '../../interfaces/requestBody';
+import { requestBody } from '../../Common/interfaces/requestBody';
 import sharp from "sharp";
 
 export async function imgConfig(request: requestBody): Promise<void> {

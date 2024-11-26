@@ -4,13 +4,13 @@ import { Request, Response, NextFunction } from "express";
 import { feedbackDocument } from "./entitie/IFeedback";
 import feedbackService from './feedback-service'
 
-import { Delete, Get, Post } from './../../Decorators/routes'
-import { Controller } from '../../Decorators/controller';
-import { validator } from '../../Decorators/validator';
-import { use } from '../../Decorators/use';
+import { Delete, Get, Post } from './../../Common/Decorators/routes'
+import { Controller } from '../../Common/Decorators/controller';
+import { validator } from '../../Common/Decorators/validator';
+import { use } from '../../Common/Decorators/use';
 
 import { authService } from '../auth/service/auth-service';
-import { requestBody } from "../../interfaces/requestBody";
+import { requestBody } from "../../Common/interfaces/requestBody";
 
 
 @Controller('/feedbacks')

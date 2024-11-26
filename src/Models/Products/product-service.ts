@@ -2,7 +2,7 @@
 import Product from './entitie/product-entitie';
 import { ProductDocument } from './entitie/IProucts';
 
-import { AppError } from '../../utils/AppError';
+import { AppError } from '../../Common/utils/AppError';
 
 class ProductService {
     constructor() { }

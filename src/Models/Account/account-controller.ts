@@ -1,17 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 
-import { accountService } from './account-service';
 import { authService } from '../auth/service/auth-service';
+import { accountService } from './account-service';
 
-import { AppError } from '../../utils/AppError';
-import { Controller } from '../../Decorators/controller';
-import { Delete, Get, Post } from '../../Decorators/routes';
-import { use } from '../../Decorators/use';
-import { validator } from '../../Decorators/validator';
 
-import Emails from '../../utils/Emails/send-email';
-import { requestBody } from '../../interfaces/requestBody';
+import { Delete, Get, Post } from '../../Common/Decorators/routes';
+import { validator } from '../../Common/Decorators/validator';
+import { Controller } from '../../Common/Decorators/controller';
+import { use } from '../../Common/Decorators/use';
+
+import Emails from '../../Common/utils/Emails/send-email';
+
+import { requestBody } from '../../Common/interfaces/requestBody';
+
+import { AppError } from '../../Common/utils/AppError';
 
 @Controller('/account')
 class AccountController {

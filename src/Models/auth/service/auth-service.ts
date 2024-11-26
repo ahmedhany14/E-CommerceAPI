@@ -2,10 +2,10 @@ import jwt from "jsonwebtoken";
 
 import { TokenService } from "./token-service";
 import { Request, Response, NextFunction } from "express";
-import { AppError } from "../../../utils/AppError";
+import { AppError } from "../../../Common/utils/AppError";
 import { AccountService } from "../../Account/account-service";
 import { profileService } from "../../Profile/profile-servies";
-import { requestBody } from "../../../interfaces/requestBody";
+import { requestBody } from "../../../Common/interfaces/requestBody";
 
 const tokenService = new TokenService();
 const accountService = new AccountService();

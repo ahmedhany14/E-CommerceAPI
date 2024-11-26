@@ -1,6 +1,6 @@
 import Profile from './entitie/profile-entitie';
 import { ProfileDocument } from './entitie/IProfile';
-import { ProfileUpdateData } from '../../interfaces/profileUpdateData';
+import { ProfileUpdateData } from '../../Common/interfaces/profileUpdateData';
 class ProfileService {
     constructor() { }
 

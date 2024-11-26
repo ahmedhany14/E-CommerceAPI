@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 
-import { Controller } from "../../Decorators/controller";
-import { Get, Post, Delete } from "../../Decorators/routes";
-import { use } from "../../Decorators/use";
+import { Get, Post, Delete } from "../../Common/Decorators/routes";
+import { Controller } from "../../Common/Decorators/controller";
+import { use } from "../../Common/Decorators/use";
 
-import { requestBody } from "../../interfaces/requestBody";
+import { requestBody } from "../../Common/interfaces/requestBody";
 import { authService } from "../auth/service/auth-service";
 import { bookmarkService } from "./bookmark-service";
 

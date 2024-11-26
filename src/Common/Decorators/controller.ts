@@ -1,7 +1,7 @@
-import { AppRouter } from "../app";
+import { AppRouter } from "../../app";
 import { metadataKeys } from "./../interfaces/MeteData";
 import { methods } from "./../interfaces/Methods";
-import { CheckBody } from "./../middelware/CheckBody";
+import { CheckBody } from "./../../middelware/CheckBody";
 
 const router = AppRouter.getInstance();
 

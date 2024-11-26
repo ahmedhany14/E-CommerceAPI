@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { Controller } from '../../Decorators/controller';
-import { validator } from '../../Decorators/validator';
-import { Get, Post } from './../../Decorators/routes'
-import { use } from '../../Decorators/use';
+import { Controller } from '../../Common/Decorators/controller';
+import { validator } from '../../Common/Decorators/validator';
+import { Get, Post } from '../../Common/Decorators/routes'
+import { use } from '../../Common/Decorators/use';
 
 
 import feedbackService from './../FeedBacks/feedback-service'
@@ -12,9 +12,9 @@ import { CartDocument } from './../Cart/entitie/ICart';
 import { productService } from './product-service';
 import cartService from './../Cart/cart-service'
 
-import { requestBody } from './../../interfaces/requestBody';
+import { requestBody } from '../../Common/interfaces/requestBody';
 
-import { AppError } from '../../utils/AppError';
+import { AppError } from '../../Common/utils/AppError';
 
 @Controller('/products')
 class ProductController {

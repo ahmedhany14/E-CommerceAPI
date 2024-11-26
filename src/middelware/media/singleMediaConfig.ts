@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import { Request } from "express";
 import multer from "multer";
-import sharp from "sharp";
-import { AppError } from "../../utils/AppError";
+
+import { AppError } from "../../Common/utils/AppError";
 
 const multerStorage = multer.memoryStorage();
 

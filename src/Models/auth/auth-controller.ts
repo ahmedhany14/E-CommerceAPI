@@ -2,10 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import passport from './passport-config';
 import crypto from 'crypto';
 
-import { Controller } from '../../Decorators/controller';
-import { validator } from '../../Decorators/validator';
-import { Get, Post } from '../../Decorators/routes';
-import { use } from '../../Decorators/use';
+import { Controller } from '../../Common/Decorators/controller';
+import { validator } from '../../Common/Decorators/validator';
+import { Get, Post } from '../../Common/Decorators/routes';
+import { use } from '../../Common/Decorators/use';
 
 
 import { authService, AuthService } from './../auth/service/auth-service';
@@ -13,10 +13,10 @@ import { AccountEntiteDocument } from '../Account/entitie/IAccount';
 import { accountService } from '../Account/account-service';
 import { profileService } from '../Profile/profile-servies';
 import { ProfileDocument } from '../Profile/entitie/IProfile';
-import { requestBody } from '../../interfaces/requestBody';
-import Emails from '../../utils/Emails/send-email';
+import { requestBody } from '../../Common/interfaces/requestBody';
+import Emails from '../../Common/utils/Emails/send-email';
 
-import { AppError } from '../../utils/AppError';
+import { AppError } from '../../Common/utils/AppError';
 
 interface requestUser {
     user: {
