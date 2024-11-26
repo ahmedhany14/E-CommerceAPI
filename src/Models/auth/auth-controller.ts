@@ -12,6 +12,7 @@ import { authService, AuthService } from './../auth/service/auth-service';
 import { AccountEntiteDocument } from '../Account/entitie/IAccount';
 import { accountService } from '../Account/account-service';
 import { profileService } from '../Profile/profile-servies';
+import { ProfileDocument } from '../Profile/entitie/IProfile';
 import { requestBody } from '../../interfaces/requestBody';
 import Emails from '../../utils/Emails/send-email';
 
@@ -100,7 +101,7 @@ class AuthController {
         const profilePayload = {
             name: email.split('@')[0] as string,
             role: 'user'
-        }
+        } as ProfileDocument;
         const profile = await profileService.createProfile(profilePayload);
 
         account.profileID = profile._id as string;

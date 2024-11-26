@@ -1,16 +1,20 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 
-import { profileService } from './profile-servies';
 import { Controller } from "../../Decorators/controller";
+import { validator } from '../../Decorators/validator';
 import { Get, Post } from "../../Decorators/routes";
 import { use } from "../../Decorators/use";
-import { AppError } from '../../utils/AppError';
-import { requestBody } from './../../interfaces/requestBody';
+
 import { AuthService } from '../auth/service/auth-service';
-import { ProfileUpdateData } from './../../interfaces/profileUpdateData';
+import { profileService } from './profile-servies';
+
 import { uploadMedia } from '../../middelware/media/singleMediaConfig';
 import { imgConfig } from '../../middelware/media/imgConfig';
-import { validator } from '../../Decorators/validator';
+
+import { ProfileUpdateData } from './../../interfaces/profileUpdateData';
+import { requestBody } from './../../interfaces/requestBody';
+
+import { AppError } from '../../utils/AppError';
 
 const authService = new AuthService();
 @Controller('/profile')

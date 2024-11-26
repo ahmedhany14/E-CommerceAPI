@@ -1,15 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
-import { profileService } from '../profile-servies';
+import { Response } from 'express';
 
 import { Controller } from "../../../Decorators/controller";
-import { Get, Post } from "../../../Decorators/routes";
 import { validator } from "../../../Decorators/validator";
+import { Get, Post } from "../../../Decorators/routes";
 import { use } from "../../../Decorators/use";
-import { AppError } from '../../../utils/AppError';
-import { requestBody } from '../../../interfaces/requestBody';
-import { AuthService } from '../../auth/service/auth-service';
-import { ProductEntitie } from '../../Products/entitie/product-entitie';
+
+import { ProductDocument } from '../../Products/entitie/IProucts';
 import { productService } from '../../Products/product-service';
+import { AuthService } from '../../auth/service/auth-service';
+
+import { requestBody } from '../../../interfaces/requestBody';
 
 const authService = new AuthService();
 
@@ -23,7 +23,7 @@ class SellerConroller {
     @use(authService.restrictTo('seller'))
     @validator('name', 'price', 'description', 'countInStock', 'images', 'category', 'discount')
     public async createProduct(request: requestBody, response: Response): Promise<void> {
-        const newProduct: ProductEntitie = {
+        const newProduct = {
             name: request.body.name,
             price: request.body.price,
             discount: request.body.discount,
@@ -34,7 +34,7 @@ class SellerConroller {
             rateCount: 0,
             rateAverage: 0,
             sellerID: request.user.id
-        }
+        } as ProductDocument
         await productService.createProduct(newProduct);
 
         response.status(201).json({

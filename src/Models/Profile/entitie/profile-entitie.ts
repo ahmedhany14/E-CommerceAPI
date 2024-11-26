@@ -1,14 +1,6 @@
 import mongoose from "mongoose";
 
-export interface ProfileEntitie {
-    name: string;
-    photo?: string;
-    address?: string;
-    number?: string;
-    role: string;
-    nationalNumber?: string;
-    _id?: string;
-}
+import { ProfileDocument } from './IProfile'
 
 const profileSchema: mongoose.Schema = new mongoose.Schema({
     name: {
@@ -37,7 +29,7 @@ const profileSchema: mongoose.Schema = new mongoose.Schema({
     }
 });
 
-const Profile = mongoose.model<ProfileEntitie>('Profile', profileSchema);
+const Profile = mongoose.model<ProfileDocument>('Profile', profileSchema);
 
 export default Profile;
 

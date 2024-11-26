@@ -1,25 +1,25 @@
 import Profile from './entitie/profile-entitie';
-import { ProfileEntitie } from './entitie/profile-entitie';
+import { ProfileDocument } from './entitie/IProfile';
 import { ProfileUpdateData } from '../../interfaces/profileUpdateData';
 class ProfileService {
     constructor() { }
 
-    public async createProfile(profile: ProfileEntitie): Promise<ProfileEntitie> {
+    public async createProfile(profile: ProfileDocument): Promise<ProfileDocument> {
         return await Profile.create(profile);
     }
 
-    public async findProfileById(id: string): Promise<ProfileEntitie> {
-        const profile = await Profile.findById(id) as ProfileEntitie;
-        return profile as ProfileEntitie;
+    public async findProfileById(id: string): Promise<ProfileDocument> {
+        const profile = await Profile.findById(id) as ProfileDocument;
+        return profile as ProfileDocument;
     }
 
-    public async updateProfile(id: string, data: ProfileUpdateData): Promise<ProfileEntitie> {
+    public async updateProfile(id: string, data: ProfileUpdateData): Promise<ProfileDocument> {
         const profile = await Profile.findByIdAndUpdate(id, data, {
             new: true,
             runValidators: true
         })
 
-        return profile as ProfileEntitie;
+        return profile as ProfileDocument;
     }
 }
 
