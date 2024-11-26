@@ -10,7 +10,7 @@ import { validator } from '../../Decorators/validator';
 import { AppError } from '../../utils/AppError';
 import { accountService } from '../Account/account-service';
 import { profileService } from '../Profile/profile-servies';
-import { AccountEntite } from './../Account/entitie/account-entite';
+import { AccountEntiteDocument } from '../Account/entitie/IAccount';
 import { authService, AuthService } from './../auth/service/auth-service';
 import { requestBody } from '../../interfaces/requestBody';
 import Emails from '../../utils/Emails/send-email';
@@ -89,7 +89,7 @@ class AuthController {
     public async register(request: Request, response: Response, next: NextFunction) {
         const { email, password, confirmPassword } = request.body;
 
-        const account = await accountService.createAccount(email, password, confirmPassword, next) as AccountEntite;
+        const account = await accountService.createAccount(email, password, confirmPassword, next) as AccountEntiteDocument;
 
         if (!account) return next();
 

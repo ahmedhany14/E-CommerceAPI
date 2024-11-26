@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 
 import Account from './entitie/account-entite';
-import { AccountEntite } from './entitie/account-entite';
+
+import { AccountEntiteDocument } from './entitie/IAccount';
 export class AccountService {
 
     async OauthAccount(email: string, profileID: string) {
@@ -11,7 +12,7 @@ export class AccountService {
         return account;
     }
 
-    async createAccount(email: string, password: string, confirmPassword: string, next: NextFunction): Promise<AccountEntite | void> {
+    async createAccount(email: string, password: string, confirmPassword: string, next: NextFunction): Promise<AccountEntiteDocument | void> {
         try {
             const account = await Account.create({ email, password, confirmPassword });
             return account;
@@ -21,8 +22,8 @@ export class AccountService {
         }
     }
 
-    async findAccountByEmail(email: string, isActive: boolean = true): Promise<AccountEntite | null> {
-        const account: AccountEntite | null = await Account.findOne({
+    async findAccountByEmail(email: string, isActive: boolean = true): Promise<AccountEntiteDocument | null> {
+        const account: AccountEntiteDocument | null = await Account.findOne({
             email,
             active: isActive
         });
@@ -30,8 +31,8 @@ export class AccountService {
         return account;
     }
 
-    async findAccountById(id: string, isActive: boolean = true): Promise<AccountEntite | null> {
-        const account: AccountEntite | null = await Account.findOne({
+    async findAccountById(id: string, isActive: boolean = true): Promise<AccountEntiteDocument | null> {
+        const account: AccountEntiteDocument | null = await Account.findOne({
             _id: id,
             active: isActive
         }).select('-password');
@@ -40,8 +41,8 @@ export class AccountService {
     }
 
 
-    async findAccountByToken(token: string): Promise<AccountEntite | null> {
-        const account: AccountEntite | null = await Account.findOne({
+    async findAccountByToken(token: string): Promise<AccountEntiteDocument | null> {
+        const account: AccountEntiteDocument | null = await Account.findOne({
             resetToken: token,
             expireResetToken: { $gt: Date.now() }
         });
