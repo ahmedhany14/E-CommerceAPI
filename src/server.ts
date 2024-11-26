@@ -11,6 +11,7 @@ import { AppError } from './Common/utils/AppError';
 const mongo_sanitize = require('express-mongo-sanitize')
 import { catchErrors } from './Common/utils/catchErrors';
 
+dotenv.config({ path: 'config.env' });
 
 // Controllers
 import './Models/Profile/Seller/seller-controller';
@@ -21,7 +22,6 @@ import './Models/Profile/profile-controller';
 import './Models/Account/account-controller';
 import './Models/auth/auth-controller';
 
-dotenv.config({ path: 'config.env' });
 
 const app = express();
 

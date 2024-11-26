@@ -5,6 +5,7 @@ import { profileService } from "../Profile/profile-servies";
 import { ProfileDocument } from "../Profile/entitie/IProfile";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
+
 const googleOptions = {
     clientID: process.env.GOOGLE_CLIENT_ID as string,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
