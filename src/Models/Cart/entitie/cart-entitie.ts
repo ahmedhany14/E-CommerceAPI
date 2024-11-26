@@ -1,13 +1,5 @@
 import mongoose from "mongoose";
-import { ProductEntitie } from "./../../Products/entitie/product-entitie"
-
-export interface CartEntitie {
-    buiedAy: Date;
-    state: string;
-    price: number;
-    profileID: string;
-    productsIDs: Array<string>;
-}
+import { CartDocument } from "./ICart";
 
 
 const cartSchema: mongoose.Schema = new mongoose.Schema({
@@ -32,6 +24,6 @@ const cartSchema: mongoose.Schema = new mongoose.Schema({
     }]
 })
 
-const Cart = mongoose.model<CartEntitie>('Cart', cartSchema);
+const Cart = mongoose.model<CartDocument>('Cart', cartSchema);
 
 export default Cart;

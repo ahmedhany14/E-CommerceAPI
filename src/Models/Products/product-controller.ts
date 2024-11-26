@@ -5,7 +5,7 @@ import { validator } from '../../Decorators/validator';
 import { Get, Post } from './../../Decorators/routes'
 import { use } from '../../Decorators/use';
 
-import { CartEntitie } from './../Cart/entitie/cart-entitie';
+import { CartDocument } from './../Cart/entitie/ICart';
 import feedbackService from './../FeedBacks/feedback-service'
 import { authService } from '../auth/service/auth-service';
 import { productService } from './product-service';
@@ -51,7 +51,7 @@ class ProductController {
 
         const price = await productService.getProductsPrice(productsIds);
         if (price === -1) return next(new AppError('error in price', 500));
-        const order: CartEntitie = {
+        const order = {
             buiedAy: new Date(),
             state: 'pending',
             price: price,
@@ -59,7 +59,7 @@ class ProductController {
             productsIDs: productsIds
         }
         console.log('order', order)
-        const cart = await cartService.CreateCart(order);
+        const cart = await cartService.CreateCart(order as CartDocument);
 
         response.status(200).json({
             message: "success",
