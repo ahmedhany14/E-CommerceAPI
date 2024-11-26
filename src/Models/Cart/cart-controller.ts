@@ -19,7 +19,7 @@ class CartController {
     public async getCart(request: requestBody, response: Response, next: NextFunction) {
         const state = request.params.state;
         const profileID = request.user.profileID;
-        const Orders = await cartService.getCart(profileID, state);
+        const Orders = await cartService.getCart(profileID, state) as CartDocument[];
 
         response.status(200).json({
             status: 'success',
@@ -27,6 +27,16 @@ class CartController {
                 Orders
             }
         })
+    }
+
+    /*@Get("/clients-orders/:state")
+    @use(authService.restrictTo('seller'))
+    @use(authService.protectedRoute)
+    */
+    public async getClientsOrderds(request: requestBody, response: Response, next: NextFunction) {
+        /*
+            feature not implemented yet
+         */
     }
 }
 
