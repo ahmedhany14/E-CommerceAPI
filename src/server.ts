@@ -1,35 +1,36 @@
-import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
-const mongo_sanitize = require('express-mongo-sanitize')
+import express from 'express';
 const xss = require('xss-clean')
 const helmet = require('helmet')
-const limitRate = require('express-rate-limit')
-import session from 'express-session';
 import { AppRouter } from "./app";
+import session from 'express-session';
 import { connectDB } from './DBconnection';
-import { catchErrors } from './Common/utils/catchErrors';
+const limitRate = require('express-rate-limit')
 import { AppError } from './Common/utils/AppError';
+const mongo_sanitize = require('express-mongo-sanitize')
+import { catchErrors } from './Common/utils/catchErrors';
+
+
+// Controllers
+import './Models/Profile/Seller/seller-controller';
+import './Models/FeedBacks/feedback-controller'
+import './Models/BookMarks/bookmark-controller';
+import './Models/Products/product-controller';
+import './Models/Profile/profile-controller';
+import './Models/Account/account-controller';
+import './Models/auth/auth-controller';
 
 dotenv.config({ path: 'config.env' });
 
-// Controllers
-import './Models/auth/auth-controller';
-import './Models/Profile/profile-controller';
-import './Models/Products/product-controller';
-import './Models/FeedBacks/feedback-controller'
-import './Models/Profile/Seller/seller-controller';
-import './Models/BookMarks/bookmark-controller';
-import './Models/Account/account-controller';
-
 const app = express();
 
-if (process.env.NODE_ENV === 'development') app.use(morgan('dev')); // for logging requests in console 
-app.use(express.json({})); // for parsing application/json
-app.use(mongo_sanitize()); // for preventing nosql injection
-app.use(xss()); // for preventing xss attacks
-app.use(helmet()); // for setting security headers
-app.use(limitRate({ windowMs: 60 * 60 * 1000, max: 100, message: 'Too many requests' })) // for limiting requests
+if (process.env.NODE_ENV === 'development')
+    app.use(morgan('dev'));
+app.use(xss());
+app.use(helmet());
+app.use(express.json({}));
+app.use(mongo_sanitize());
 app.use(session({
     secret: process.env.SESSION_SECRET as string,
     resave: false,
@@ -39,11 +40,10 @@ app.use(session({
         maxAge: 10000
     }
 }));
+app.use(limitRate({ windowMs: 60 * 60 * 1000, max: 100, message: 'Too many requests' }))
 
 
-app.get('/', (req, res) => {
-    res.send('Hello from express');
-});
+app.get('/', (req, res) => { res.send('Hello from express'); });
 
 
 app.use('/ecommerce', AppRouter.getInstance());
@@ -52,9 +52,9 @@ app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
-app.use(catchErrors); // for catching any errors in the application
+app.use(catchErrors);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     connectDB();
