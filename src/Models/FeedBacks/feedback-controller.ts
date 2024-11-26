@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 
-import Feedbacks from "./entitie/feedback-entitie";
-import { feedbackEntitie } from "./entitie/feedback-entitie";
+import { feedbackDocument } from "./entitie/IFeedback";
 import feedbackService from './feedback-service'
 
 import { Delete, Get, Post } from './../../Decorators/routes'
@@ -23,14 +22,14 @@ class FeedbackController {
     public async pushFeedback(request: requestBody, response: Response, next: NextFunction) {
         const content = request.body.content;
         const productID = request.params.productId, profileId = request.user.profileID
-        const feedback: feedbackEntitie = {
+        const feedback = {
             content,
             postTime: new Date(),
             profileID: profileId,
             productID: productID,
         }
 
-        const comment = await feedbackService.createFeedBack(feedback);
+        const comment = await feedbackService.createFeedBack(feedback as feedbackDocument);
 
         response.status(200).json({
             message: 'succes',

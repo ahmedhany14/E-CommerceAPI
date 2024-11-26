@@ -1,16 +1,16 @@
 import Feedbacks from "./entitie/feedback-entitie";
-import { feedbackEntitie } from "./entitie/feedback-entitie";
+import { feedbackDocument } from "./entitie/IFeedback";
 
 class FeedbackService {
     constructor() { }
 
 
-    public async createFeedBack(feedback: feedbackEntitie): Promise<feedbackEntitie> {
+    public async createFeedBack(feedback: feedbackDocument): Promise<feedbackDocument> {
         const comment = await Feedbacks.create(feedback);
         return comment;
     }
 
-    public async getFeedBacks(id: string): Promise<feedbackEntitie> {
+    public async getFeedBacks(id: string): Promise<feedbackDocument> {
         const comment: any = await Feedbacks.find({
             productID: id
         }).populate('profileID')

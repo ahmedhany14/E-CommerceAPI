@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 
-export interface feedbackEntitie {
-    content: string;
-    postTime: Date;
-    profileID: string;
-    productID: string;
-}
+import { feedbackDocument } from "./IFeedback";
 
 const feedbackSchema = new mongoose.Schema({
     content: {
@@ -25,6 +20,6 @@ const feedbackSchema = new mongoose.Schema({
     }
 });
 
-const Feedbacks = mongoose.model<feedbackEntitie>('Feedbacks', feedbackSchema);
+const Feedbacks = mongoose.model<feedbackDocument>('Feedbacks', feedbackSchema);
 
 export default Feedbacks;
