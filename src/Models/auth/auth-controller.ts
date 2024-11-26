@@ -1,24 +1,28 @@
+import { Request, Response, NextFunction } from 'express';
+import passport from './passport-config';
 import crypto from 'crypto';
 
-import passport from './passport-config';
-import { Request, Response, NextFunction } from 'express';
-
 import { Controller } from '../../Decorators/controller';
+import { validator } from '../../Decorators/validator';
 import { Get, Post } from '../../Decorators/routes';
 import { use } from '../../Decorators/use';
-import { validator } from '../../Decorators/validator';
-import { AppError } from '../../utils/AppError';
+
+
+import { authService, AuthService } from './../auth/service/auth-service';
+import { AccountEntiteDocument } from '../Account/entitie/IAccount';
 import { accountService } from '../Account/account-service';
 import { profileService } from '../Profile/profile-servies';
-import { AccountEntiteDocument } from '../Account/entitie/IAccount';
-import { authService, AuthService } from './../auth/service/auth-service';
 import { requestBody } from '../../interfaces/requestBody';
 import Emails from '../../utils/Emails/send-email';
+
+import { AppError } from '../../utils/AppError';
+
 interface requestUser {
     user: {
         _id: string,
     }
 }
+
 @Controller('/auth')
 class AuthController {
 

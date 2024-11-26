@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
-
-export interface BookMarkEntitie {
-    profileId: mongoose.Types.ObjectId;
-    productId: Array<mongoose.Types.ObjectId>;
-    save(): Promise<BookMarkEntitie>;
-}
+import { IBookMarkDocument } from "./IBookMark";
+import { bookmarkActions } from "./BookMarkActions";
 
 const BookMarkSchema: mongoose.Schema = new mongoose.Schema({
     profileId: {
@@ -20,7 +16,7 @@ const BookMarkSchema: mongoose.Schema = new mongoose.Schema({
     }],
 });
 
-BookMarkSchema.index({ profileId: 1 }, { unique: true }); // to prevent duplicate bookmarks
-const BookMark = mongoose.model<BookMarkEntitie>("BookMark", BookMarkSchema);
+bookmarkActions(BookMarkSchema);
+const BookMark = mongoose.model<IBookMarkDocument>("BookMark", BookMarkSchema);
 
 export default BookMark;

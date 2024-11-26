@@ -2,11 +2,12 @@ import { Request, Response } from "express";
 
 import { Controller } from "../../Decorators/controller";
 import { Get, Post, Delete } from "../../Decorators/routes";
-import { requestBody } from "../../interfaces/requestBody";
-import { authService } from "../auth/service/auth-service";
 import { use } from "../../Decorators/use";
 
+import { requestBody } from "../../interfaces/requestBody";
+import { authService } from "../auth/service/auth-service";
 import { bookmarkService } from "./bookmark-service";
+
 @Controller("/bookmarks")
 class BookmarkController {
     @Get("/")

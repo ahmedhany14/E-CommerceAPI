@@ -1,17 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { Get, Post } from './../../Decorators/routes'
 import { Controller } from '../../Decorators/controller';
 import { validator } from '../../Decorators/validator';
+import { Get, Post } from './../../Decorators/routes'
 import { use } from '../../Decorators/use';
 
+import { CartEntitie } from './../Cart/entitie/cart-entitie';
+import feedbackService from './../FeedBacks/feedback-service'
 import { authService } from '../auth/service/auth-service';
 import { productService } from './product-service';
 import cartService from './../Cart/cart-service'
-import { CartEntitie } from './../Cart/entitie/cart-entitie';
-import feedbackService from './../FeedBacks/feedback-service'
 
 import { requestBody } from './../../interfaces/requestBody';
+
 import { AppError } from '../../utils/AppError';
 
 @Controller('/products')
