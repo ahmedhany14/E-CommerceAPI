@@ -1,17 +1,6 @@
 import mongoose from "mongoose";
 
-export interface ProductEntitie {
-    name: string;
-    price: number;
-    discount: number;
-    description: string;
-    countInStock: number;
-    images: [string];
-    category: [string];
-    rateCount: number;
-    rateAverage: number;
-    sellerID: string;
-}
+import { ProductDocument } from './IProucts'
 
 const ProductSchema: mongoose.Schema = new mongoose.Schema({
     name: {
@@ -58,7 +47,7 @@ const ProductSchema: mongoose.Schema = new mongoose.Schema({
     }
 });
 
-const Product = mongoose.model<ProductEntitie>('Product', ProductSchema);
+const Product = mongoose.model<ProductDocument>('Product', ProductSchema);
 
 export default Product;
 

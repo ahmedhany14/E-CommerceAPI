@@ -5,9 +5,10 @@ import { validator } from '../../Decorators/validator';
 import { Get, Post } from './../../Decorators/routes'
 import { use } from '../../Decorators/use';
 
-import { CartDocument } from './../Cart/entitie/ICart';
+
 import feedbackService from './../FeedBacks/feedback-service'
 import { authService } from '../auth/service/auth-service';
+import { CartDocument } from './../Cart/entitie/ICart';
 import { productService } from './product-service';
 import cartService from './../Cart/cart-service'
 
@@ -58,7 +59,7 @@ class ProductController {
             profileID: profileId,
             productsIDs: productsIds
         }
-        console.log('order', order)
+
         const cart = await cartService.CreateCart(order as CartDocument);
 
         response.status(200).json({

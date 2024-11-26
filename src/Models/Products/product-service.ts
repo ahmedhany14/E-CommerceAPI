@@ -1,36 +1,38 @@
+
 import Product from './entitie/product-entitie';
-import { ProductEntitie } from './entitie/product-entitie';
+import { ProductDocument } from './entitie/IProucts';
+
 import { AppError } from '../../utils/AppError';
 
 class ProductService {
     constructor() { }
 
-    public async createProduct(product: ProductEntitie): Promise<ProductEntitie> {
+    public async createProduct(product: ProductDocument): Promise<ProductDocument> {
         const newProduct = await Product.create(product);
-        return newProduct as ProductEntitie;
+        return newProduct as ProductDocument;
     }
 
-    public async getProducts(category: string): Promise<ProductEntitie[]> {
+    public async getProducts(category: string): Promise<ProductDocument[]> {
         const products = await Product.find({
             category: { $all: [category] }
         })
         return products;
     }
 
-    public async getProduct(id: string): Promise<ProductEntitie> {
+    public async getProduct(id: string): Promise<ProductDocument> {
         const product = await Product.findById(id).select('-_id -__v');
         if (!product) throw new Error('Product not found');
         return product;
     }
 
-    public async getSellerProducts(sellerId: string): Promise<ProductEntitie[]> {
+    public async getSellerProducts(sellerId: string): Promise<ProductDocument[]> {
         const products = await Product.find({
             sellerID: sellerId
         });
         return products;
     }
 
-    public async updateProduct(id: string, product: any): Promise<ProductEntitie> {
+    public async updateProduct(id: string, product: any): Promise<ProductDocument> {
         const updatedProduct = await Product.findByIdAndUpdate(id, product, { new: true });
         if (!updatedProduct) throw new AppError('Product not found', 404);
         return updatedProduct;
