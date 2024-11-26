@@ -16,8 +16,8 @@ import { uploadMedia } from '../../middelware/multi-media/uploader';
 import { imgConfig } from '../../middelware/multi-media/imgsConfig';
 
 
-import { requestBody } from '../../Common/interfaces/requestBody';
 import { requestMedia } from '../../middelware/multi-media/types/requestMedia';
+import { requestBody } from '../../Common/interfaces/requestBody';
 
 import { AppError } from '../../Common/utils/AppError';
 
