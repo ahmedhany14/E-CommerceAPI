@@ -12,7 +12,7 @@ import { use } from '../../Common/Decorators/use';
 
 import Emails from '../../Common/utils/Emails/send-email';
 
-import { requestBody } from '../../Common/interfaces/requestBody';
+import { requestBody } from '../../Common/interfaces/auth-types';
 
 import { AppError } from '../../Common/utils/AppError';
 

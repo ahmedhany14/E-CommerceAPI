@@ -9,7 +9,7 @@ import { ProductDocument } from '../../Products/entitie/IProucts';
 import { productService } from '../../Products/product-service';
 import { AuthService } from '../../auth/service/auth-service';
 
-import { requestBody } from '../../../Common/interfaces/requestBody';
+import { requestBody } from '../../../Common/interfaces/auth-types';
 
 const authService = new AuthService();
 

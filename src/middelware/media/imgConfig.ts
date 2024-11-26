@@ -1,4 +1,4 @@
-import { requestBody } from '../../Common/interfaces/requestBody';
+import { requestBody } from '../../Common/interfaces/auth-types';
 import sharp from "sharp";
 
 export async function imgConfig(request: requestBody): Promise<void> {

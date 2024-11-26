@@ -10,19 +10,17 @@ import { use } from '../../Common/Decorators/use';
 
 import { authService, AuthService } from './../auth/service/auth-service';
 import { AccountEntiteDocument } from '../Account/entitie/IAccount';
+import { ProfileDocument } from '../Profile/entitie/IProfile';
 import { accountService } from '../Account/account-service';
 import { profileService } from '../Profile/profile-servies';
-import { ProfileDocument } from '../Profile/entitie/IProfile';
-import { requestBody } from '../../Common/interfaces/requestBody';
+
 import Emails from '../../Common/utils/Emails/send-email';
 
-import { AppError } from '../../Common/utils/AppError';
 
-interface requestUser {
-    user: {
-        _id: string,
-    }
-}
+import { requestBody } from '../../Common/interfaces/auth-types';
+import { requestAuth } from '../../Common/interfaces/auth-types';
+
+import { AppError } from '../../Common/utils/AppError';
 
 @Controller('/auth')
 class AuthController {
@@ -37,18 +35,17 @@ class AuthController {
 
     @Get('/google/callback')
     @use(passport.authenticate('google', { failureRedirect: '/fail' }))
-    public async googleCallback(request: requestUser, response: Response) {
-        const token: string = await new AuthService().createToken(request.user?._id, response);
+    public async googleCallback(request: requestAuth, response: Response) {
+        request.token = await new AuthService().createToken(request.user.id, response);
         response.redirect('/ecommerce/auth/authDone');
     }
 
     @Get('/authDone')
-    public authDone(request: Request, response: Response) {
-        console.log(request)
+    public authDone(request: requestAuth, response: Response) {
         response.status(200).json({
             message: 'User authenticated',
             user: request.user,
-            token: request.headers.cookie?.split('=')[1]
+            token: request.token
         })
     }
 
@@ -61,7 +58,7 @@ class AuthController {
 
     @Post('/login')
     @validator('email', 'password')
-    public async login(request: Request, response: Response, next: NextFunction) {
+    public async login(request: requestBody, response: Response, next: NextFunction) {
         const { email, password } = request.body;
 
         const account = await accountService.findAccountByEmail(email);
@@ -77,7 +74,8 @@ class AuthController {
         const token: string = await new AuthService().createToken(account._id as string, response);
 
         request.user = {
-            id: account._id,
+            id: account._id as string,
+            profileID: account.profileID as string,
             email: account.email,
             role: profile.role
         }
@@ -91,7 +89,7 @@ class AuthController {
 
     @Post('/register')
     @validator('email', 'password', 'confirmPassword')
-    public async register(request: Request, response: Response, next: NextFunction) {
+    public async register(request: requestBody, response: Response, next: NextFunction) {
         const { email, password, confirmPassword } = request.body;
 
         const account = await accountService.createAccount(email, password, confirmPassword, next) as AccountEntiteDocument;
@@ -111,7 +109,8 @@ class AuthController {
         const token: string = await new AuthService().createToken(account._id as string, response);
 
         request.user = {
-            id: account._id,
+            id: account._id as string,
+            profileID: account.profileID,
             email: account.email,
             role: profile.role
         }
@@ -137,11 +136,11 @@ class AuthController {
     }
 
     @Post('/resetPassword')
-    @use(authService.protectedRoute)
     @validator('password', 'confirmPassword')
+    @use(authService.protectedRoute)
     public async resetPassword(request: requestBody, response: Response, next: NextFunction) {
         const { password, confirmPassword } = request.body;
-        console.log(password, confirmPassword)
+
         if (!password || !confirmPassword || password !== confirmPassword) {
             return next(new AppError('both passwords not matched', 401));
         }

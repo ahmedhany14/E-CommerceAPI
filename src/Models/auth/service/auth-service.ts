@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import { AppError } from "../../../Common/utils/AppError";
 import { AccountService } from "../../Account/account-service";
 import { profileService } from "../../Profile/profile-servies";
-import { requestBody } from "../../../Common/interfaces/requestBody";
+import { requestBody } from "../../../Common/interfaces/auth-types";
 
 const tokenService = new TokenService();
 const accountService = new AccountService();

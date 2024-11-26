@@ -17,7 +17,7 @@ import { imgConfig } from '../../middelware/multi-media/imgsConfig';
 
 
 import { requestMedia } from '../../middelware/multi-media/types/requestMedia';
-import { requestBody } from '../../Common/interfaces/requestBody';
+import { requestBody } from '../../Common/interfaces/auth-types';
 
 import { AppError } from '../../Common/utils/AppError';
 
@@ -108,7 +108,7 @@ class ProductController {
 
         response.status(200).json({
             message: 'Image uploaded',
-            product 
+            product
         });
     }
 }

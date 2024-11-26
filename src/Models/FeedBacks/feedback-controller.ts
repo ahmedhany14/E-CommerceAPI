@@ -10,7 +10,7 @@ import { validator } from '../../Common/Decorators/validator';
 import { use } from '../../Common/Decorators/use';
 
 import { authService } from '../auth/service/auth-service';
-import { requestBody } from "../../Common/interfaces/requestBody";
+import { requestBody } from "../../Common/interfaces/auth-types";
 
 
 @Controller('/feedbacks')

@@ -12,7 +12,7 @@ import { uploadMedia } from '../../middelware/media/singleMediaConfig';
 import { imgConfig } from '../../middelware/media/imgConfig';
 
 import { ProfileUpdateData } from '../../Common/interfaces/profileUpdateData';
-import { requestBody } from '../../Common/interfaces/requestBody';
+import { requestBody } from '../../Common/interfaces/auth-types';
 
 import { AppError } from '../../Common/utils/AppError';
 
