@@ -21,7 +21,7 @@ import './Models/Products/product-controller';
 import './Models/Profile/profile-controller';
 import './Models/Account/account-controller';
 import './Models/auth/auth-controller';
-
+import './Models/Cart/cart-controller';
 
 const app = express();
 

@@ -16,6 +16,14 @@ class CartService {
         return cart as CartDocument;
     }
 
+    public async getCart(profileId: string, state: string): Promise<CartDocument[]> {
+        const cart = await Cart.find({
+            profileID: profileId,
+            state: state
+        }).populate('productsIDs') ;
+        return cart as CartDocument[];
+    }
+
 }
 
 const cartService = new CartService();
