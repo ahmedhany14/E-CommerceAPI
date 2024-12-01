@@ -1,21 +1,17 @@
 import { Request } from 'express';
 
-export interface requestAuth extends Request {
+export interface Itoken {
     token: string;
-    user: {
+}
+
+export interface Iuser {
+    userInfo: {
         id: string;
         profileID: string;
         email: string;
         role: string;
-    };
+    }
 }
 
-export interface requestBody extends Request {
-    user: {
-        id: string;
-        profileID: string;
-        email: string;
-        role: string;
-    };
-}
-
+export interface requestAuth extends Itoken, Request, Iuser { }
+export interface requestBody extends Request, Iuser { }

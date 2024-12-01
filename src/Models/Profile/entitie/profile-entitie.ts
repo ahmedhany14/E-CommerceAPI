@@ -5,28 +5,29 @@ import { ProfileDocument } from './IProfile'
 const profileSchema: mongoose.Schema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Please provide a name'],
-        lowercase: true
-    },
-    photo: {
-        type: String,
+        required: true
     },
     address: {
-        type: String,
-        lowercase: true
+        type: String
     },
-    number: {
-        type: String,
+    phone: {
+        type: String
     },
-    role: {
-        type: String,
-        default: 'user',
-        enum: ['user', 'seller']
+    photo: {
+        type: String
     },
-    nationalNumber: {
-        type: String,
-        unique: true,
-    }
+    bookmarks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+    }],
+    orders: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cart'
+    }],
+    products: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+    }]
 });
 
 const Profile = mongoose.model<ProfileDocument>('Profile', profileSchema);

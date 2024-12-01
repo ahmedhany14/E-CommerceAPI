@@ -20,10 +20,10 @@ const authService = new AuthService();
 @Controller('/profile')
 class ProfileController {
 
-    @Get('/')
+    @Get('/me')
     @use(authService.protectedRoute)
     public async getProfile(request: requestBody, response: Response, next: NextFunction) {
-        const id = request.user.profileID;
+        const id = request.userInfo.profileID;
         const profile = await profileService.findProfileById(id);
         if (!profile) return next(new AppError('Profile not found', 404));
         response.status(200).json({
@@ -32,11 +32,11 @@ class ProfileController {
         });
     }
 
-    @Post('/update')
+    @Post('/updateDate')
     @use(authService.protectedRoute)
     public async updateProfile(request: requestBody, response: Response, next: NextFunction) {
         const data: IProfile = request.body;
-        const id = request.user.profileID;
+        const id = request.userInfo.profileID;
 
         const profile = await profileService.updateProfile(id, data);
 
@@ -54,9 +54,9 @@ class ProfileController {
         await imgConfig(request);
 
         const data = {
-            photo: `profile-${request.user.profileID}.jpeg`
+            photo: `profile-${request.userInfo.profileID}.jpeg`
         } as IProfile;
-        const id = request.user.profileID;
+        const id = request.userInfo.profileID;
         const profile = await profileService.updateProfile(id, data);
 
         response.status(200).json({
@@ -65,6 +65,7 @@ class ProfileController {
         });
     }
 
+    /*
     @Post('/upgrade')
     @use(authService.protectedRoute)
     @validator('nationalNumber')
@@ -79,5 +80,5 @@ class ProfileController {
             message: 'Profile upgraded',
             profile
         });
-    }
+    }*/
 }
