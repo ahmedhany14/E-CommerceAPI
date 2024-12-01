@@ -29,3 +29,9 @@ export class BadRequestError extends AppError {
 		super(message, statusCode);
 	}
 }
+
+export class DateBaseError extends AppError {
+    constructor(message: string, statusCode: number = 500) {
+        super(message, statusCode);
+    }
+}
