@@ -24,9 +24,9 @@ class ProfileController {
     @use(authService.protectedRoute)
     public async getProfile(request: requestBody, response: Response, next: NextFunction) {
         const id = request.userInfo.profileID; // Get user id, it's gaurenteed to be in the request object after the protectedRoute middleware
- 
+
         const profile = await profileService.findProfileById(id); // search for the profile in the database
- 
+
         if (!profile) return next(new NotFoundError('Profile not found', 404)); // validate if the profile exists or not
 
 
