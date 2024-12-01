@@ -14,7 +14,7 @@ import { imgConfig } from '../../middelware/media/imgConfig';
 import { IProfile } from './entitie/IProfile';
 import { requestBody } from '../../Common/interfaces/auth-types';
 
-import { AppError } from '../../Common/utils/AppError';
+import { AppError, NotFoundError, BadRequestError, AuthError, ValidationError } from '../../Common/utils/AppError';
 
 const authService = new AuthService();
 @Controller('/profile')
@@ -23,9 +23,14 @@ class ProfileController {
     @Get('/me')
     @use(authService.protectedRoute)
     public async getProfile(request: requestBody, response: Response, next: NextFunction) {
-        const id = request.userInfo.profileID;
-        const profile = await profileService.findProfileById(id);
-        if (!profile) return next(new AppError('Profile not found', 404));
+        const id = request.userInfo.profileID; // Get user id, it's gaurenteed to be in the request object after the protectedRoute middleware
+ 
+        const profile = await profileService.findProfileById(id); // search for the profile in the database
+ 
+        if (!profile) return next(new NotFoundError('Profile not found', 404)); // validate if the profile exists or not
+
+
+        // send response to the client
         response.status(200).json({
             message: 'Profile found',
             profile
