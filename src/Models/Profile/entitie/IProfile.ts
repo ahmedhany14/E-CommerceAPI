@@ -2,11 +2,12 @@ import mongoose from "mongoose";
 
 export interface IProfile {
     name: string;
-    photo?: string;
     address?: string;
-    number?: string;
-    role: string;
-    nationalNumber?: string;
+    phone?: string;
+    photo?: string;
+    bookmarks?: [string]; // for buyer to store his bookmarks
+    orders?: [string]; // for buyer to store his orders
+    products?: [string]; // for seller to store his released products
 }
 
 export interface ProfileDocument extends IProfile, mongoose.Document { }

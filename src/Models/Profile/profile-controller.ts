@@ -14,29 +14,34 @@ import { imgConfig } from '../../middelware/media/imgConfig';
 import { IProfile } from './entitie/IProfile';
 import { requestBody } from '../../Common/interfaces/auth-types';
 
-import { AppError } from '../../Common/utils/AppError';
+import { AppError, NotFoundError, BadRequestError, AuthError, ValidationError } from '../../Common/utils/AppError';
 
 const authService = new AuthService();
 @Controller('/profile')
 class ProfileController {
 
-    @Get('/')
+    @Get('/me')
     @use(authService.protectedRoute)
     public async getProfile(request: requestBody, response: Response, next: NextFunction) {
-        const id = request.user.profileID;
-        const profile = await profileService.findProfileById(id);
-        if (!profile) return next(new AppError('Profile not found', 404));
+        const id = request.userInfo.profileID; // Get user id, it's gaurenteed to be in the request object after the protectedRoute middleware
+
+        const profile = await profileService.findProfileById(id); // search for the profile in the database
+
+        if (!profile) return next(new NotFoundError('Profile not found', 404)); // validate if the profile exists or not
+
+
+        // send response to the client
         response.status(200).json({
             message: 'Profile found',
             profile
         });
     }
 
-    @Post('/update')
+    @Post('/updateDate')
     @use(authService.protectedRoute)
     public async updateProfile(request: requestBody, response: Response, next: NextFunction) {
         const data: IProfile = request.body;
-        const id = request.user.profileID;
+        const id = request.userInfo.profileID;
 
         const profile = await profileService.updateProfile(id, data);
 
@@ -54,9 +59,9 @@ class ProfileController {
         await imgConfig(request);
 
         const data = {
-            photo: `profile-${request.user.profileID}.jpeg`
+            photo: `profile-${request.userInfo.profileID}.jpeg`
         } as IProfile;
-        const id = request.user.profileID;
+        const id = request.userInfo.profileID;
         const profile = await profileService.updateProfile(id, data);
 
         response.status(200).json({
@@ -65,6 +70,7 @@ class ProfileController {
         });
     }
 
+    /*
     @Post('/upgrade')
     @use(authService.protectedRoute)
     @validator('nationalNumber')
@@ -79,5 +85,5 @@ class ProfileController {
             message: 'Profile upgraded',
             profile
         });
-    }
+    }*/
 }
