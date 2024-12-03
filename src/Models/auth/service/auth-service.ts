@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
 
 import { TokenService } from "./token-service";
-import { Request, Response, NextFunction } from "express";
-import { AppError } from "../../../Common/utils/AppError";
+import { Response, NextFunction } from "express";
+import { AppError, NotFoundError, AuthError} from "../../../Common/utils/AppError";
 import { AccountService } from "../../Account/account-service";
-import { profileService } from "../../Profile/profile-servies";
-import { requestBody } from "../../../Common/interfaces/auth-types";
+
+import { requestAuth } from "../../../Common/interfaces/auth-types";
 
 const tokenService = new TokenService();
 const accountService = new AccountService();
@@ -30,9 +30,11 @@ export class AuthService {
         return token;
     }
 
-    public async protectedRoute(request: requestBody, response: Response, next: NextFunction) {
-        if (!request.headers.cookie || request.headers.cookie == 'jwt=loggedout')
-            return next(new AppError('You are not logged in! Please log in to get access.', 401));
+    public async protectedRoute(request: requestAuth, response: Response, next: NextFunction) {
+        if (!request.headers.cookie || request.headers.cookie == 'jwt=loggedout'){
+            return next(new AuthError('You need to log in', 403));
+        }
+            
 
         // 1) Getting token from the cookie
         let token: string = request.headers.cookie.split('=')[1];
@@ -43,30 +45,31 @@ export class AuthService {
         // 3) Check if the account still exists
         const account = await accountService.findAccountById(decoded.payload);
 
-        if (!account) return next(new AppError('Account not found', 404));
-        const profile = await profileService.findProfileById(account.profileID);
+        if (!account) {
+            return next(new NotFoundError('The account belonging to this token does no longer exist', 401));
+        }
 
         // 4) Check if account changed password after the token was issued
-        if (account.changedPasswordAfter(decoded.iat)) return next(new AppError('Password has been changed. Please login again', 401));
+        if (account.changedPasswordAfter(decoded.iat)) {
+            return next(new AuthError('User recently changed password! Please log in again', 401));
+        }
 
         // 5) Grant access to protected route
         request.user = {
             id: account._id as string,
             profileID: account.profileID,
             email: account.email,
-            role: profile.role
+            role: account.role
         }
+
         next();
     }
 
     public restrictTo(...roles: string[]) {
+        return async (request: requestAuth, response: Response, next: NextFunction) => {
 
-        return async (request: requestBody, response: Response, next: NextFunction) => {
-            if (!request.headers.cookie) return next(new AppError('You need to log in', 403));
-            const decoded: any = jwt.verify(request.headers.cookie.split('=')[1], process.env.JWT_SECRET as string);
-            const account = await accountService.findAccountById(decoded.payload);
-            const profile = await profileService.findProfileById(account?.profileID as string);
-            if (!roles.includes(profile.role)) return next(new AppError('You do not have permission to perform this action', 403));
+            if (!roles.includes(request.user.role)) return next(new AppError('You do not have permission to perform this action', 403));
+
             next();
         }
     }
