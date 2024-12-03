@@ -114,7 +114,7 @@ class AuthController {
         const profile = await profileService.createProfile(profilePayload);
 
         account.profileID = profile._id as string;
-        
+
         await account.save({ validateBeforeSave: false });
 
         // create a token and send it to the user
@@ -210,7 +210,7 @@ class AuthController {
         }
 
         const decodedToken = await crypto.createHash('sha256').update(token).digest('hex');
-        console.log(decodedToken)
+
         const account = await accountService.findAccountByToken(decodedToken);
         if (!account) return next(new AppError('Token is invalid or expired', 401));
 
