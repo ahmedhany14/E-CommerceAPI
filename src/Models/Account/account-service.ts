@@ -23,6 +23,8 @@ export class AccountService {
     }
 
     async findAccountByEmail(email: string, isActive: boolean = true): Promise<AccountEntiteDocument | null> {
+        console.log(isActive);
+
         const account: AccountEntiteDocument | null = await Account.findOne({
             email,
             active: isActive
