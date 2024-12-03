@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 
 export interface ICart {
-    buiedAy: Date;
-    state: string;
-    price: number;
-    profileID: string;
+    buiedAt: Date;
+    Orderstate: string;
+    Orderprice: number;
+    paymentMethod: string;
+    buyerId: string;
     productsIDs: Array<string>;
 }
 
