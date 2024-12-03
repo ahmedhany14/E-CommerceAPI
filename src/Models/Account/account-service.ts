@@ -58,5 +58,9 @@ export class AccountService {
     async deleteAccount(id: string): Promise<void> {
         await Account.findByIdAndDelete(id);
     }
+
+    async updateData(id: string, data: any): Promise<void> {
+        await Account.findByIdAndUpdate(id, data);
+    }
 }
 export const accountService = new AccountService();

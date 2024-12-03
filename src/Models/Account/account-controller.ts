@@ -106,4 +106,49 @@ class AccountController {
             message: 'Account activated successfully login now'
         });
     }
+
+
+    @Post('/changeEmail')
+    @validator('email')
+    @use(authService.protectedRoute)
+    public async changeEmail(request: requestAuth, response: Response, next: NextFunction) {
+        const email = request.body.email;
+
+        if (!email) {
+            return next(new ValidationError('Email is required', 400));
+        }
+
+        const account = await accountService.findAccountByEmail(email) ||
+            await accountService.findAccountByEmail(email, false);
+        if (account) {
+            return next(new ValidationError('Email is already taken', 400));
+        }
+
+        await accountService.updateData(request.user.id, { email });
+
+        request.headers.cookie = 'jwt=loggedout';
+
+        response.status(200).json({
+            status: 'success',
+            message: 'Email changed successfully, login again with new email'
+        })
+    }
+
+    @Post('/upgrade')
+    @validator('nationalId')
+    @use(authService.protectedRoute)
+    public async upgradeAccount(request: requestAuth, response: Response, next: NextFunction) {
+        const nationalId = request.body.nationalId;
+
+        if (!nationalId) {
+            return next(new ValidationError('National ID is required', 400));
+        }
+
+        await accountService.updateData(request.user.id, { nationalId, role: 'seller' });
+
+        response.status(200).json({
+            status: 'success',
+            message: 'Account upgraded successfully'
+        });
+    }
 }
