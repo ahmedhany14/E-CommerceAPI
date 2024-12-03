@@ -12,7 +12,7 @@ import { uploadMedia } from '../../middelware/media/singleMediaConfig';
 import { imgConfig } from '../../middelware/media/imgConfig';
 
 import { IProfile } from './entitie/IProfile';
-import { requestBody } from '../../Common/interfaces/auth-types';
+import { requestAuth } from '../../Common/interfaces/auth-types';
 
 import { AppError, NotFoundError, BadRequestError, AuthError, ValidationError } from '../../Common/utils/AppError';
 
@@ -22,8 +22,12 @@ class ProfileController {
 
     @Get('/me')
     @use(authService.protectedRoute)
-    public async getProfile(request: requestBody, response: Response, next: NextFunction) {
-        const id = request.userInfo.profileID; // Get user id, it's gaurenteed to be in the request object after the protectedRoute middleware
+    public async getProfile(request: requestAuth, response: Response, next: NextFunction) {
+        const id = request.user.profileID; // Get user id, it's gaurenteed to be in the request object after the protectedRoute middleware
+
+        if(!id){
+            return next(new BadRequestError('Profile id is required', 400));
+        }
 
         const profile = await profileService.findProfileById(id); // search for the profile in the database
 
@@ -39,9 +43,12 @@ class ProfileController {
 
     @Post('/updateDate')
     @use(authService.protectedRoute)
-    public async updateProfile(request: requestBody, response: Response, next: NextFunction) {
+    public async updateProfile(request: requestAuth, response: Response, next: NextFunction) {
         const data: IProfile = request.body;
-        const id = request.userInfo.profileID;
+        const id = request.user.profileID;
+        if(!id || !data){
+            return next(new BadRequestError('Profile id and data are required', 400));
+        }
 
         const profile = await profileService.updateProfile(id, data);
 
@@ -52,16 +59,16 @@ class ProfileController {
     }
 
     @Post('/upload')
-    @use(authService.protectedRoute)
+    @use(imgConfig)
     @use(uploadMedia)
-    public async uploadProfileImage(request: requestBody, response: Response, next: NextFunction) {
-        if (!request.file) return next(new AppError('Please upload an image', 400));
-        await imgConfig(request);
+    @use(authService.protectedRoute)
+    public async uploadProfileImage(request: requestAuth, response: Response, next: NextFunction) {
 
         const data = {
-            photo: `profile-${request.userInfo.profileID}.jpeg`
+            photo: `profile-${request.user.profileID}.jpeg`
         } as IProfile;
-        const id = request.userInfo.profileID;
+
+        const id = request.user.profileID;
         const profile = await profileService.updateProfile(id, data);
 
         response.status(200).json({
@@ -69,21 +76,4 @@ class ProfileController {
             profile
         });
     }
-
-    /*
-    @Post('/upgrade')
-    @use(authService.protectedRoute)
-    @validator('nationalNumber')
-    public async upgradeToSeller(request: requestBody, response: Response, next: NextFunction) {
-        const id = request.user.profileID;
-        const data = {
-            role: 'seller',
-            nationalNumber: request.body.nationalNumber as string
-        } as IProfile;
-        const profile = await profileService.updateProfile(id, data);
-        response.status(200).json({
-            message: 'Profile upgraded',
-            profile
-        });
-    }*/
 }
