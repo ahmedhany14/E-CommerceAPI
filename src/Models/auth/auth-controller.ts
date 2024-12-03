@@ -181,8 +181,15 @@ class AuthController {
     @validator('email')
     public async forgotPassword(request: Request, response: Response, next: NextFunction) {
         const { email } = request.body;
+
+        if (!email) {
+            return next(new ValidationError('Please provide email', 400));
+        }
+
         const account = await accountService.findAccountByEmail(email);
-        if (!account) return next(new AppError('Account not found', 404));
+        if (!account) {
+            return next(new NotFoundError('Account not found', 404));
+        }
 
         const token = await account.createPasswordResetToken();
         await account.save({ validateBeforeSave: false });
@@ -205,14 +212,19 @@ class AuthController {
         const { token } = request.params;
         const { password, confirmPassword } = request.body;
 
-        if (!password || !confirmPassword || password !== confirmPassword) {
+        if (!token || !password || !confirmPassword) {
+            return next(new ValidationError('Please provide token, password and confirmPassword', 400));
+        }
+        if (password !== confirmPassword) {
             return next(new AppError('both passwords not matched', 401));
         }
 
         const decodedToken = await crypto.createHash('sha256').update(token).digest('hex');
 
         const account = await accountService.findAccountByToken(decodedToken);
-        if (!account) return next(new AppError('Token is invalid or expired', 401));
+        if (!account) {
+            return next(new NotFoundError('Account not found', 404));
+        }
 
         account.password = password;
         account.confirmPassword = confirmPassword;
