@@ -64,10 +64,15 @@ class AuthController {
             return next(new BadRequestError('Please provide email and password', 400));
         }
 
-        const account = await accountService.findAccountByEmail(email);
+        const account = await accountService.findAccountByEmail(email) ||
+                        await accountService.findAccountByEmail(email, false);
 
         if (!account) {
             return next(new NotFoundError('Account not found', 404));
+        }
+
+        if(account.active === false){
+            return next(new AuthError('The account is not active', 401));
         }
 
         // password check by using database password
