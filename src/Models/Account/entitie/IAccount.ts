@@ -3,10 +3,12 @@ import { Document } from 'mongoose';
 export interface IAcount {
     email: string;
     password: string;
-    confirmPassword: string | undefined;
-    passwordChangedTime: Date;
-    resetToken: string | undefined;
-    expireResetToken: Date | undefined;
+    confirmPassword?: string;
+    passwordChangedTime?: Date;
+    resetToken?: string;
+    expireResetToken?: Date;
+    nationaId?: string;
+    role: string;
     active: boolean;
     profileID: string;
 }
