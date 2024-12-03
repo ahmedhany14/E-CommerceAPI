@@ -4,14 +4,11 @@ export interface Itoken {
     token: string;
 }
 
-export interface Iuser {
-    userInfo: {
+export interface requestAuth extends Itoken , Request{
+    user: {
         id: string;
         profileID: string;
         email: string;
         role: string;
-    }
+    },
 }
-
-export interface requestAuth extends Itoken, Request, Iuser { }
-export interface requestBody extends Request, Iuser { }

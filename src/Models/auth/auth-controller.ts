@@ -42,11 +42,11 @@ class AuthController {
 
     @Get('/authDone')
     public authDone(request: requestAuth, response: Response) {
+
         response.status(200).json({
             message: 'User authenticated',
-            user: request.user,
-            token: request.token
         })
+
     }
 
     @Get('/fail')
