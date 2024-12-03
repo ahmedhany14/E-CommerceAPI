@@ -22,7 +22,7 @@ class AccountController {
     @Delete('/')
     @use(authService.protectedRoute)
     public async deleteAccount(request: requestBody, response: Response, next: NextFunction) {
-        const id = request.user.id;
+        const id = request.userInfo.id;
         console.log(id);
         await accountService.deactiveAccount(id);
 
