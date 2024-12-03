@@ -17,10 +17,9 @@ import { profileService } from '../Profile/profile-servies';
 import Emails from '../../Common/utils/Emails/send-email';
 
 
-import { requestBody } from '../../Common/interfaces/auth-types';
 import { requestAuth } from '../../Common/interfaces/auth-types';
 
-import { AppError } from '../../Common/utils/AppError';
+import { AppError, AuthError, BadRequestError, NotFoundError, ValidationError } from '../../Common/utils/AppError';
 
 @Controller('/auth')
 class AuthController {
@@ -42,11 +41,11 @@ class AuthController {
 
     @Get('/authDone')
     public authDone(request: requestAuth, response: Response) {
+
         response.status(200).json({
             message: 'User authenticated',
-            user: request.user,
-            token: request.token
         })
+
     }
 
     @Get('/fail')
@@ -58,17 +57,23 @@ class AuthController {
 
     @Post('/login')
     @validator('email', 'password')
-    public async login(request: requestBody, response: Response, next: NextFunction) {
+    public async login(request: requestAuth, response: Response, next: NextFunction) {
         const { email, password } = request.body;
+
+        if (!email || !password) {
+            return next(new BadRequestError('Please provide email and password', 400));
+        }
 
         const account = await accountService.findAccountByEmail(email);
 
-        if (!account) return next(new AppError('Account not found', 404));
-
-        const profile = await profileService.findProfileById(account.profileID);
+        if (!account) {
+            return next(new NotFoundError('Account not found', 404));
+        }
 
         // password check by using database password
-        if (!account.password || !await account.comparePassword(password, account.password)) return next(new AppError('Password is incorrect', 401));
+        if (!account.password || !await account.comparePassword(password, account.password)) {
+            return next(new AuthError('Password is incorrect', 401));
+        }
 
         // create a token and send it to the user
         const token: string = await new AuthService().createToken(account._id as string, response);
@@ -77,7 +82,7 @@ class AuthController {
             id: account._id as string,
             profileID: account.profileID as string,
             email: account.email,
-            role: profile.role
+            role: account.role
         }
 
         response.status(200).json({
@@ -89,20 +94,27 @@ class AuthController {
 
     @Post('/register')
     @validator('email', 'password', 'confirmPassword')
-    public async register(request: requestBody, response: Response, next: NextFunction) {
+    public async register(request: requestAuth, response: Response, next: NextFunction) {
         const { email, password, confirmPassword } = request.body;
+
+        if (!email || !password || !confirmPassword) {
+            return next(new BadRequestError('Please provide email, password and confirmPassword', 400));
+        }
 
         const account = await accountService.createAccount(email, password, confirmPassword, next) as AccountEntiteDocument;
 
-        if (!account) return next();
+        if (!account) {
+            return next(new ValidationError('Account not created', 400));
+        }
 
         const profilePayload = {
             name: email.split('@')[0] as string,
-            role: 'user'
         } as ProfileDocument;
+
         const profile = await profileService.createProfile(profilePayload);
 
         account.profileID = profile._id as string;
+
         await account.save({ validateBeforeSave: false });
 
         // create a token and send it to the user
@@ -112,7 +124,7 @@ class AuthController {
             id: account._id as string,
             profileID: account.profileID,
             email: account.email,
-            role: profile.role
+            role: account.role
         }
 
         response.status(200).json({
@@ -138,7 +150,7 @@ class AuthController {
     @Post('/resetPassword')
     @validator('password', 'confirmPassword')
     @use(authService.protectedRoute)
-    public async resetPassword(request: requestBody, response: Response, next: NextFunction) {
+    public async resetPassword(request: requestAuth, response: Response, next: NextFunction) {
         const { password, confirmPassword } = request.body;
 
         if (!password || !confirmPassword || password !== confirmPassword) {
@@ -169,8 +181,15 @@ class AuthController {
     @validator('email')
     public async forgotPassword(request: Request, response: Response, next: NextFunction) {
         const { email } = request.body;
+
+        if (!email) {
+            return next(new ValidationError('Please provide email', 400));
+        }
+
         const account = await accountService.findAccountByEmail(email);
-        if (!account) return next(new AppError('Account not found', 404));
+        if (!account) {
+            return next(new NotFoundError('Account not found', 404));
+        }
 
         const token = await account.createPasswordResetToken();
         await account.save({ validateBeforeSave: false });
@@ -193,14 +212,19 @@ class AuthController {
         const { token } = request.params;
         const { password, confirmPassword } = request.body;
 
-        if (!password || !confirmPassword || password !== confirmPassword) {
+        if (!token || !password || !confirmPassword) {
+            return next(new ValidationError('Please provide token, password and confirmPassword', 400));
+        }
+        if (password !== confirmPassword) {
             return next(new AppError('both passwords not matched', 401));
         }
 
         const decodedToken = await crypto.createHash('sha256').update(token).digest('hex');
-        console.log(decodedToken)
+
         const account = await accountService.findAccountByToken(decodedToken);
-        if (!account) return next(new AppError('Token is invalid or expired', 401));
+        if (!account) {
+            return next(new NotFoundError('Account not found', 404));
+        }
 
         account.password = password;
         account.confirmPassword = confirmPassword;
