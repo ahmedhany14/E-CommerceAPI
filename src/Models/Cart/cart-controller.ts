@@ -9,34 +9,17 @@ import {authService} from "../auth/service/auth-service";
 import {CartDocument} from "./entitie/ICart";
 import cartService from "./cart-service";
 
-import {requestBody} from "../../Common/interfaces/auth-types";
+import {requestAuth} from "../../Common/interfaces/auth-types";
 
 @Controller("/cart")
 class CartController {
 
-    @Get("/orders/:state")
+    @Post('/pay')
+    @validator('productIDs')
     @use(authService.protectedRoute)
-    public async getCart(request: requestBody, response: Response, next: NextFunction) {
-        const state = request.params.state;
-        const profileID = request.user.profileID;
-        const Orders = await cartService.getCart(profileID, state) as CartDocument[];
+    public async pay(req: Request, res: Response, next: NextFunction) {
 
-        response.status(200).json({
-            status: 'success',
-            data: {
-                Orders
-            }
-        })
-    }
-
-    /*@Get("/clients-orders/:state")
-    @use(authService.restrictTo('seller'))
-    @use(authService.protectedRoute)
-    */
-    public async getClientsOrderds(request: requestBody, response: Response, next: NextFunction) {
-        /*
-            feature not implemented yet
-         */
     }
 }
+
 
