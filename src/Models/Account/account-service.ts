@@ -18,7 +18,7 @@ export class AccountService {
             return account;
         }
         catch (error) {
-            return next(error);
+            return;
         }
     }
 
