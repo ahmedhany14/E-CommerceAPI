@@ -28,6 +28,12 @@ const accountSchema: mongoose.Schema = new mongoose.Schema({
     passwordChangedTime: Date,
     resetToken: String,
     expireResetToken: Date,
+    nationalId: String,
+    role: {
+        type: String,
+        enum: ['seller', 'user'],
+        default: 'user',
+    },
     active: {
         type: Boolean,
         default: true,
