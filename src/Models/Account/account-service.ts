@@ -54,5 +54,13 @@ export class AccountService {
     async deactiveAccount(id: string): Promise<void> {
         await Account.findByIdAndUpdate(id, { active: false });
     }
+
+    async deleteAccount(id: string): Promise<void> {
+        await Account.findByIdAndDelete(id);
+    }
+
+    async updateData(id: string, data: any): Promise<void> {
+        await Account.findByIdAndUpdate(id, data);
+    }
 }
 export const accountService = new AccountService();

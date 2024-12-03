@@ -44,7 +44,8 @@ const accountSchema: mongoose.Schema = new mongoose.Schema({
     }
 });
 
-
+accountSchema.index({ email: 1 });
+accountSchema.index({ expireResetToken: 1, resetToken: 1 });
 constructMethodsAndMiddlewares(accountSchema);
 const Account = mongoose.model<AccountEntiteDocument>('Account', accountSchema);
 
