@@ -1,29 +1,47 @@
 import mongoose from "mongoose";
-import { CartDocument } from "./ICart";
+import {CartDocument} from "./ICart";
 
+/*
+    buiedAt: Date;
+    Orderstate: string;
+    Orderprice: number;
+    paymentMethod: string;
+    buyerId: string;
+    productsIDs: Array<string>;
 
+ */
 const cartSchema: mongoose.Schema = new mongoose.Schema({
-    buiedAy: {
-        type: Date
+    buiedAt: {
+        type: Date,
+        required: true
     },
-    state: {
+    Orderstate: {
         type: String,
-        default: 'pending',
-        enum: ['pending', 'in a way', 'completed']
+        required: true,
+        enum: ['pending', 'inWay', 'completed', 'canceled']
     },
-    price: {
-        type: Number
+    Orderprice: {
+        type: Number,
+        required: true
     },
-    profileID: {
+    paymentMethod: {
         type: String,
-        ref: 'Profile'
+        required: true
     },
-    productsIDs: [{
-        type: String,
-        ref: 'Product'
-    }]
+    buyerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Profile',
+    },
+    productsIDs: {
+        type: [mongoose.Schema.Types.ObjectId],
+        required: true,
+        ref: 'Products'
+    }
 })
 
+cartSchema.index({buyerId: 1, Orderstate: 1});
+cartSchema.index({paymentMethod: 1})
 const Cart = mongoose.model<CartDocument>('Cart', cartSchema);
 
 export default Cart;

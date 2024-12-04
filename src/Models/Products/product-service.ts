@@ -44,7 +44,7 @@ class ProductService {
             for (let i = 0; i < productsIds.length; i++) {
                 const product = await Product.findById(productsIds[i]);
                 if (!product) throw new AppError('Product not found', 404);
-                price += product.price;
+                price += product.price - (product.price * product.discount / 100);
             }
         } catch (err) {
             console.log(err);
