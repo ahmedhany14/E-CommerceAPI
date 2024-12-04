@@ -4,7 +4,7 @@ import { ProductDocument } from './entitie/IProucts';
 
 import { AppError } from '../../Common/utils/AppError';
 
-class ProductService {
+export class ProductService {
     constructor() { }
 
     public async createProduct(product: ProductDocument): Promise<ProductDocument> {
@@ -38,19 +38,25 @@ class ProductService {
         return updatedProduct;
     }
 
-    public async getProductsPrice(productsIds: string[]): Promise<number> {
+    public async getProductsPrice(productsIds: Map<string, number>): Promise<number> {
         let price = 0;
         try {
-            for (let i = 0; i < productsIds.length; i++) {
-                const product = await Product.findById(productsIds[i]);
+            for (let [key, value] of productsIds) {
+                const product = await Product.findById(key);
                 if (!product) throw new AppError('Product not found', 404);
-                price += product.price - (product.price * product.discount / 100);
+                if (product.countInStock < value) throw new AppError('Product out of stock', 404);
+                price += product.price * value - (product.price * value * product.discount / 100);
             }
         } catch (err) {
             console.log(err);
             return -1;
         }
         return price;
+    }
+
+    public async updateProductQuantity(id: string, decrease: number): Promise<ProductDocument> {
+        const product = await Product.findOneAndUpdate({ _id: id }, { $inc: { countInStock: -decrease } }, { new: true }) as ProductDocument;
+        return product;
     }
 }
 export const productService = new ProductService();
