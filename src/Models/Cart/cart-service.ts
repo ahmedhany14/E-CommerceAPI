@@ -1,8 +1,8 @@
-import { CartDocument } from './entitie/ICart';
+import { CartDocument, ICart } from './entitie/ICart';
 import Cart from './entitie/cart-entitie'
 
 
-class CartService {
+export class CartService {
 
     constructor() { }
 
@@ -20,10 +20,14 @@ class CartService {
         const cart = await Cart.find({
             profileID: profileId,
             state: state
-        }).populate('productsIDs') ;
+        }).populate('productsIDs');
         return cart as CartDocument[];
     }
 
+    public async addCart(cart: ICart): Promise<CartDocument> {
+        const newCart = await (new Cart(cart)).save();
+        return newCart;
+    }
 }
 
 const cartService = new CartService();

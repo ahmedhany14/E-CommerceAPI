@@ -7,7 +7,8 @@ import {IPayment} from "../interface/IPayment";
 export  class PaymentStripeService implements IPayment {
 
     public async createSession(request: requestCart, response: Response, next: NextFunction) {
-        const direct_url = `${request.protocol}://${request.get('host')}/ecommerce/cart/cartPayment/success/?profileId=${request.user.profileID}&price=${request.cart.price}`;
+        const productIds:string = request.cart.products.join(',');
+        const direct_url = `${request.protocol}://${request.get('host')}/ecommerce/cart/cartPayment/success/?profileId=${request.user.profileID}&price=${request.cart.price}&products=${productIds}&method=stripe`;
         const cancel_url = `${request.protocol}://${request.get('host')}/ecommerce/cart/cartPayment/cancel`;
         const user = request.user;
         if (!user) {

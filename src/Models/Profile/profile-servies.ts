@@ -1,7 +1,7 @@
 import Profile from './entitie/profile-entitie';
 import { ProfileDocument } from './entitie/IProfile';
 import { IProfile } from './entitie/IProfile';
-class ProfileService {
+export class ProfileService {
     constructor() { }
 
     public async createProfile(profile: ProfileDocument): Promise<ProfileDocument> {
@@ -18,6 +18,15 @@ class ProfileService {
             new: true,
             runValidators: true
         })
+
+        return profile as ProfileDocument;
+    }
+
+    public async addOrder(id: string, order: string): Promise<ProfileDocument> {
+        const profile = await Profile.findByIdAndUpdate(id, { $push: { orders: order } }, {
+            new: true,
+            runValidators: true
+        });
 
         return profile as ProfileDocument;
     }
